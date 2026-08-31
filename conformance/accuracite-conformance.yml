@@ -1,0 +1,122 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+note: >-
+  Assessed against the published API reference and live probes. AccuraCite publishes no
+  OpenAPI, so every "conforms" judgement below rests on the human reference plus one
+  unauthenticated probe on 2026-08-31; nothing is inferred from a spec that does not exist.
+standards:
+- id: oauth2
+  conforms: false
+  evidence: >-
+    Auth is a single X-API-Key header. /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource both 404 (probed 2026-08-31).
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 (probed 2026-08-31).
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors are application/json with a bare {"error": "..."} body, not
+    application/problem+json. Observed on a live 401 from
+    POST https://accuracite.com/api/v1/verify, 2026-08-31.
+- id: rfc9116
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 (probed 2026-08-31).
+- id: rfc8594
+  conforms: false
+  evidence: No deprecation or Sunset-header policy is published anywhere on the site.
+- id: pagination
+  conforms: false
+  evidence: >-
+    No cursor or offset parameters. Collections are capped inline (texts <= 10,
+    limit 1-10).
+- id: idempotency
+  conforms: false
+  na: true
+  evidence: >-
+    No Idempotency-Key support. Both operations are read-only lookups, so there is no
+    write to make idempotent.
+- id: json-api
+  conforms: false
+  evidence: Plain ad-hoc JSON; no JSON:API document structure or media type.
+- id: openapi
+  conforms: false
+  evidence: >-
+    /openapi.json, /openapi.yaml, /swagger.json, /api/v1/openapi.json, /api/openapi.json,
+    /api-docs.json, /redoc and /apis.json all returned 404 (probed 2026-08-31).
+- id: hsts
+  conforms: true
+  evidence: >-
+    strict-transport-security max-age=31536000; includeSubDomains observed on live
+    responses. See security/accuracite-domain-security.yml.
+- id: csp
+  conforms: true
+  evidence: >-
+    A restrictive Content-Security-Policy (default-src 'self'; frame-ancestors 'none';
+    object-src 'none') plus x-content-type-options, x-frame-options, referrer-policy and
+    permissions-policy on live API responses, 2026-08-31.
+domain_standards:
+- id: doi
+  name: DOI (ISO 26324) digital object identifiers
+  conforms: true
+  role: consumed-and-emitted
+  evidence: >-
+    The `citation` object returned by both endpoints carries a `doi` field; the docs'
+    own verified example returns "10.48550/arXiv.1706.03762". DOI strings are also
+    accepted as citation input, and doi.org is named as a recognized scholarly domain
+    that routes to the full database search.
+  location: API reference, Verify Citations / Find Citations response tables.
+- id: bibtex
+  name: BibTeX entry types
+  conforms: true
+  role: emitted
+  evidence: >-
+    Every citation object includes `bibtex_entry_type` (e.g. "article"). The pricing FAQ
+    also names BibTeX and RIS as accepted bibliography input formats on the web product.
+  location: API reference response field table; https://accuracite.com/pricing FAQ.
+- id: ris
+  name: RIS bibliographic interchange format
+  conforms: partial
+  role: consumed (web product only)
+  evidence: >-
+    Named as an accepted upload format for the web app. NOT exposed on the REST API,
+    which accepts only raw citation strings.
+  location: https://accuracite.com/pricing FAQ.
+- id: crossref
+  name: Crossref metadata
+  conforms: consumer
+  role: upstream-source
+  evidence: >-
+    Named as one of the indexes queried and as a possible value of the `source` response
+    field. AccuraCite is a consumer of the standard's records, not a publisher of them.
+- id: openalex
+  name: OpenAlex
+  conforms: consumer
+  role: upstream-source
+  evidence: Named in the `source` enum and in the product description.
+- id: oai-pmh
+  conforms: false
+  evidence: >-
+    No OAI-PMH verb endpoint is published; AccuraCite reaches the repositories through
+    their own APIs rather than exposing a harvesting interface of its own.
+- id: orcid
+  conforms: false
+  evidence: >-
+    Authors are returned as a single free-text `author` string with no ORCID iD field —
+    the one obvious scholarly identifier the response schema omits.
+upstream_sources:
+- OpenAlex
+- Crossref
+- Semantic Scholar
+- PubMed
+- DBLP
+- arXiv
+- CORE
+- Google Scholar
+compliance_certifications: []
+compliance_note: >-
+  No SOC 2, ISO 27001, GDPR/DPA, HIPAA or trust-center page is published. AccuraCite is a
+  solo-founder product (see https://accuracite.com/about) and makes no certification
+  claims, so NO type Compliance or TrustCenter pointer is wired — there is nothing to
+  point at. probe-security-programs.py returned vdp=none trust=none on 2026-08-31.

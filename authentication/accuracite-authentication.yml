@@ -1,0 +1,44 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+docs: https://accuracite.com/api-docs
+note: >-
+  AccuraCite publishes no OpenAPI, so this profile was read from the published API
+  reference and confirmed against a live unauthenticated request. There are no
+  OAuth, OIDC or mTLS surfaces — a single API key header is the whole auth model.
+schemes:
+- name: apiKeyHeader
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  required: true
+  applies_to:
+  - POST /api/v1/verify
+  - POST /api/v1/generate
+  description: >-
+    All endpoints require an API key passed in the X-API-Key header. Key issuance is
+    tied to a paid plan: the docs and the pricing FAQ both state that API access
+    requires the Pro or Bulk Verification plan, and the free plan cannot call the API.
+  key_prefix: null
+  key_prefix_note: The provider does not document a key prefix or key format.
+oauth2: false
+openid_connect: false
+mutual_tls: false
+entitlement:
+  model: plan-gated
+  free_tier_api_access: false
+  paid_plans_with_api_access:
+  - Pro
+  - Bulk Verification
+  source: https://accuracite.com/pricing
+observed:
+- probe: POST https://accuracite.com/api/v1/verify with no X-API-Key
+  date: '2026-08-31'
+  http_status: 401
+  content_type: application/json
+  body: '{"error":"Unauthorized. Please provide a valid X-API-Key header."}'
+failure_modes:
+- status: 401
+  meaning: Missing or invalid X-API-Key.
+- status: 403
+  meaning: Key is valid but the account is not on a plan that includes API access.

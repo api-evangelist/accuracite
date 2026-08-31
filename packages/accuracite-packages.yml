@@ -1,0 +1,30 @@
+generated: '2026-08-31'
+method: searched
+source: registry searches, 2026-08-31
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  AccuraCite publishes NO client libraries in any language. The API reference ships
+  copy-paste curl and `requests` snippets only, and there is no SDK, CLI, GitHub
+  organization or CDN-distributed component anywhere. No type SDKs or Packages pointer
+  is wired into apis.yml, because there is nothing to point at.
+registries_searched:
+- registry: npm
+  endpoint: https://registry.npmjs.org/-/v1/search?text=accuracite
+  result: 0 objects
+  version: null
+- registry: PyPI
+  endpoint: https://pypi.org/pypi/accuracite/json
+  result: 404 Not Found
+  version: null
+- registry: GitHub
+  endpoint: https://api.github.com/users/accuracite
+  result: 404 — no provider-owned organization or user
+  version: null
+- registry: GitHub code search
+  endpoint: https://api.github.com/search/repositories?q=accuracite
+  result: >-
+    1 result, and it is this API Evangelist profile repository (api-evangelist/accuracite),
+    not a provider repository
+  version: null

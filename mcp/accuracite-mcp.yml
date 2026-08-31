@@ -1,0 +1,80 @@
+generated: '2026-08-31'
+method: derived
+source: https://accuracite.com/api-docs
+status: candidate
+note: >-
+  AccuraCite ships NO MCP server. Searched the site, the sitemap, npm, PyPI and GitHub
+  on 2026-08-31 and found none; https://accuracite.com/mcp returns 404 and
+  mcp.accuracite.com does not resolve. The tools below are a CANDIDATE derivation from
+  the two published REST endpoints — nobody serves them. This is a notable gap given the
+  provider wrote a full blog post about MCP citation verification
+  (https://accuracite.com/blog/why-mcp-tool-calling-doesnt-fix-citation-hallucination),
+  where they describe a consensus-checking MCP server as "a legitimate way to bring
+  real-time fact-checking into a chat or editor workflow" — an argument for exposing
+  exactly this product as one, which they have not yet done.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+probes:
+- url: https://accuracite.com/mcp
+  status: 404
+- url: https://mcp.accuracite.com/
+  status: NXDOMAIN
+- url: https://accuracite.com/.well-known/ai-plugin.json
+  status: 404
+- registry: npm
+  query: accuracite
+  result: 0 results
+- registry: PyPI
+  query: accuracite
+  result: 404
+- registry: GitHub
+  query: accuracite
+  result: no provider-owned org or repository
+candidate_tools:
+- name: verify_citation
+  description: >-
+    Verify a single citation string (or a bare URL) against eight academic indexes and
+    return verified / mismatch / not_found with the matched bibliographic record.
+  backing_operation: POST /api/v1/verify
+  input_schema_source: https://accuracite.com/api-docs
+  inputs:
+  - name: text
+    type: string
+    required: true
+    constraint: under 2000 characters
+  consequence: read-only; deducts 1 credit per successful call
+- name: verify_citations_batch
+  description: Verify up to 10 citation strings in one parallel call.
+  backing_operation: POST /api/v1/verify
+  inputs:
+  - name: texts
+    type: 'string[]'
+    required: true
+    constraint: max 10 items, each under 2000 characters
+  consequence: >-
+    read-only; all-or-nothing credit claim for the whole batch — rejected with 429 if
+    the balance cannot cover every item
+- name: find_sources_for_claim
+  description: >-
+    Find real papers whose abstracts actually support a supplied claim, rather than
+    papers whose titles merely look related.
+  backing_operation: POST /api/v1/generate
+  inputs:
+  - name: text
+    type: string
+    required: true
+  - name: limit
+    type: integer
+    required: false
+    default: 1
+    constraint: 1-10
+  consequence: read-only; deducts 4 credits per citation returned, shortfall auto-refunded
+authentication:
+  scheme: X-API-Key header
+  plan_required: Pro or Bulk Verification
+  see: authentication/accuracite-authentication.yml

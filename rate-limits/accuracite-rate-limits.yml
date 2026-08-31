@@ -1,0 +1,55 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+docs: https://accuracite.com/api-docs
+limit_count: 2
+limits:
+- scope: per-key
+  endpoint: POST /api/v1/verify
+  window: 1m
+  limit: 60
+  unit: requests
+  burst: null
+  note: 'Docs: "Verification: 60 requests per minute".'
+- scope: per-key
+  endpoint: POST /api/v1/generate
+  window: 1m
+  limit: 30
+  unit: requests
+  burst: null
+  note: 'Docs: "Generation: 30 requests per minute".'
+quotas:
+- scope: per-account
+  window: monthly
+  unit: credits
+  note: >-
+    Verification and generation draw on ONE shared monthly credit pool, not separate
+    allowances. A successful verify deducts 1 credit; a generate deducts 4 credits per
+    citation returned. Plan totals: Free 50/mo, Pro 1,000/mo, Bulk Verification
+    10,000/mo. See plans/accuracite-plans-pricing.yml.
+  source: https://accuracite.com/pricing
+batch_semantics:
+  endpoint: POST /api/v1/verify
+  max_items: 10
+  all_or_nothing: true
+  note: >-
+    A `texts` batch claims credit for the whole batch up front. If the remaining
+    balance cannot cover every citation, the entire request is rejected with 429 and
+    nothing is charged or processed — the API never partially verifies a batch.
+exhaustion:
+  status: 429
+  meaning: >-
+    429 covers BOTH the per-minute rate limit and the credit balance running out; the
+    docs do not distinguish the two in the status code, so a client cannot tell a
+    retry-after-a-minute condition from a top-up-your-account condition from the
+    status alone.
+response_headers:
+  documented: []
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented, and none was
+    present on the live 401 observed on 2026-08-31 (probed:
+    POST https://accuracite.com/api/v1/verify with no key). The limits are published
+    as prose only, so an agent has no runtime signal of how much budget is left and
+    must infer exhaustion from a 429 after the fact. This is the single clearest
+    runtime-semantics gap on this API.

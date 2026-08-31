@@ -1,0 +1,61 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+versioning:
+  scheme: uri-path
+  current_version: v1
+  base: https://accuracite.com/api/v1
+  policy_published: false
+  note: >-
+    The version is carried in the path and nowhere else. No version-negotiation header,
+    no dated versions, and no written policy on what constitutes a breaking change.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy, notice period or Sunset/Deprecation header support is
+    published. NO type Deprecation pointer is wired, because there is no policy page
+    to point at.
+status_page:
+  published: false
+  probed:
+  - url: https://status.accuracite.com/
+    result: NXDOMAIN
+  - url: https://accuracite.com/status
+    status: 404
+  note: >-
+    No status page or uptime history. NO type StatusPage pointer is wired. Worth noting
+    for an integrator: the API is a facade over eight third-party indexes, so its real
+    availability depends on upstreams (Crossref, OpenAlex, PubMed, arXiv, DBLP, CORE,
+    Semantic Scholar, Google Scholar) whose incidents are invisible from here.
+changelog:
+  published: false
+  probed:
+  - url: https://accuracite.com/changelog
+    status: 404
+  note: >-
+    No dated changelog. Product changes are narrated in blog posts instead — e.g. "Why
+    AI Citation Checkers Get Fooled by Fake DOIs (And How We Fixed Ours)" describes a
+    shipped fix to the verification pipeline, but carries no version and no date field
+    a machine can read.
+sla:
+  published: false
+  note: No uptime or support-response SLA is published on any plan, including the paid tiers.
+support:
+  channel: https://accuracite.com/feedback
+  email: support@accuracite.com
+  tiers:
+  - {plan: Free, level: Standard Support}
+  - {plan: Pro, level: Priority Support}
+  - {plan: Bulk Verification, level: Priority Support}
+  source: https://accuracite.com/pricing
+maturity:
+  stage: early
+  evidence: >-
+    Solo-founder product (https://accuracite.com/about), v1 API only, no changelog, no
+    status page, no SDKs and no public repositories. The API reference itself is
+    unusually complete for this stage — full request/response field tables, an error
+    table, batch semantics and worked curl/Python examples.

@@ -1,0 +1,34 @@
+# AccuraCite
+
+> AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they reach your paper. Citations are checked against 7 academic databases (OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, and more) and each is returned as verified, mismatched, or not found.
+
+## Product
+
+- [Home](https://accuracite.com/): Overview of bibliography verification and claim-to-source lookup.
+- [Verify a Bibliography](https://accuracite.com/ai-citation-checker): Paste text or upload a PDF to check every citation in a reference list against academic indexes.
+- [Find Sources for a Claim](https://accuracite.com/find-sources-for-claim): Given a claim or sentence, returns real papers whose abstracts actually support it, not just title matches.
+- [How It Works](https://accuracite.com/how-it-works): Explanation of the verification pipeline and cross-provider consensus logic.
+- [Pricing](https://accuracite.com/pricing): Free and paid plan details and usage quotas.
+
+## Blog
+
+- [How to Check Citations as a Peer Reviewer (Before You Sign Off)](https://accuracite.com/blog/how-to-check-citations-as-a-peer-reviewer): Reviewers rarely have time to check 60 references by hand. Here's how to bulk-verify a manuscript's citations before you submit your review.
+- [The Best AI Citation Checkers in 2026: What We Could Actually Verify](https://accuracite.com/blog/best-ai-citation-checker-tools): We compared AccuraCite, Citely, GPTZero, and CiteTrue as citation checkers, verifying vendor claims directly instead of repeating unconfirmed numbers.
+- [How to Find Sources for a Claim When AI Can't Back It Up](https://accuracite.com/blog/how-to-find-sources-for-a-claim-ai-cant-back-up): Asking ChatGPT for a source often returns a hallucinated citation or a real paper that doesn't back your claim. Here's how to find sources that actually do.
+- [Why AI Citation Checkers Get Fooled by Fake DOIs (And How We Fixed Ours)](https://accuracite.com/blog/why-ai-citation-checkers-get-fooled-by-fake-dois): A citation-verification tool told us a famous 2017 paper was published in 2025 by a fake publisher. Here's the real bug, and the fix AccuraCite shipped.
+- [Seven Fake DOIs, One Famous Paper: A Warning for Journal Editors](https://accuracite.com/blog/seven-fake-dois-one-famous-paper-warning-for-journal-editors): A real duplicate DOI impersonates a famous 2017 paper seven times over in Crossref. What it means for verifying manuscript references before publication.
+- [How to Check If ChatGPT's Citations Are Real Before You Submit](https://accuracite.com/blog/how-to-check-if-chatgpt-citations-are-real-before-you-submit): Did ChatGPT give you real sources? Here's how to check every citation in your own paper before you submit it, in one pass instead of Googling each by hand.
+- [Why 'Just Use an LLM with MCP Tools' Doesn't Solve Citation Hallucination](https://accuracite.com/blog/why-mcp-tool-calling-doesnt-fix-citation-hallucination): MCP lets an LLM call academic APIs directly. That sounds like it solves citation hallucination. It doesn't, by itself — here's the actual failure mode, with a real example.
+- [How to Check Your Students' Citations for AI Hallucinations](https://accuracite.com/blog/how-to-check-your-students-citations-for-ai-hallucinations): Turnitin catches copied text, not fake sources. Here's how to bulk-check student papers for AI-hallucinated citations in one pass, without manually looking up every reference.
+
+## API
+
+- [API Documentation](https://accuracite.com/api-docs): REST API reference, authentication, and rate limits.
+- `POST https://accuracite.com/api/v1/verify`: Verify a single citation string; returns a verified / mismatch / not_found status. Requires an `X-API-Key` header.
+- `POST https://accuracite.com/api/v1/generate`: Find real literature supporting a given claim. Requires an `X-API-Key` header.
+
+## Optional
+
+- [About](https://accuracite.com/about)
+- [Terms of Service](https://accuracite.com/terms)
+- [Privacy Policy](https://accuracite.com/privacy)

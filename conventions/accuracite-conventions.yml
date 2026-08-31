@@ -1,0 +1,123 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+docs: https://accuracite.com/api-docs
+summary: >-
+  Two synchronous POST endpoints under a path-versioned /api/v1 base, keyed by an
+  X-API-Key header, returning plain JSON. No pagination, no idempotency keys, no
+  request-id tracing, no rate-limit headers, no webhooks. The whole surface is
+  read-only lookup — nothing an agent calls here creates, mutates or deletes a
+  resource, so the write-side conventions do not apply.
+authentication:
+  style: api-key-header
+  header: X-API-Key
+  see: authentication/accuracite-authentication.yml
+transport:
+  base_url: https://accuracite.com/api/v1
+  methods_used: [POST]
+  request_media_type: application/json
+  response_media_type: application/json
+  synchronous: true
+  note: >-
+    Both operations are POST even though both are semantically reads — the citation
+    text is the payload, so a GET was not practical. Nothing is cacheable.
+versioning:
+  style: uri-path
+  current: v1
+  header_negotiation: false
+  see: lifecycle/accuracite-lifecycle.yml
+idempotency:
+  supported: false
+  header: null
+  na: true
+  note: >-
+    No Idempotency-Key header, and none is needed: neither endpoint creates state.
+    The only side effect of a repeat call is a second credit deduction, and the docs
+    document no dedup window for that. NOT wired as a type Idempotency pointer,
+    because the provider publishes no idempotency mechanism.
+pagination:
+  supported: false
+  note: >-
+    No cursors or offsets anywhere. The only collection-shaped input is `texts`,
+    capped at 10 items per call; the only collection-shaped output is
+    `citations`, capped by `limit` (1-10). Bulk work is client-side chunking.
+batching:
+  supported: true
+  endpoint: POST /api/v1/verify
+  field: texts
+  max_items: 10
+  parallel: true
+  all_or_nothing_credits: true
+  note: >-
+    Batch items are verified in parallel, so latency is close to a single citation
+    rather than 10x. Credit is claimed for the whole batch up front and the request is
+    rejected entirely (429) if the balance cannot cover it.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: false
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id is documented or returned in the body. Live responses do carry
+    infrastructure headers (x-railway-request-id, cf-ray) but those are the platform's,
+    not a provider-supported correlation contract, and the docs never mention them.
+rate_limit_signaling:
+  headers: []
+  status_on_exhaustion: 429
+  retry_after: false
+  see: rate-limits/accuracite-rate-limits.yml
+error_envelope:
+  media_type: application/json
+  shape: '{"error": "<message>"}'
+  rfc9457: false
+  see: errors/accuracite-problem-types.yml
+result_semantics:
+  note: >-
+    The one convention an integrator must not get wrong: on verify, ALWAYS branch on
+    `verification_status` (verified | mismatch | not_found), never on whether the
+    `citation` object is populated. The docs state explicitly that a not_found result
+    may still carry a `citation` — it is the closest candidate match, not a confirmed
+    one. Treating a present `citation` as a hit is exactly the failure mode the product
+    exists to prevent.
+reversibility:
+  applicable: false
+  grade: na
+  reason: read-only-api
+  note: >-
+    Both published operations are lookups against third-party bibliographic indexes.
+    They create no resource, so there is no cancel/refund/void/undo/restore operation
+    to document and no reversal window to state. The only consumable is credits, and
+    the docs describe exactly one automatic adjustment (below) — no caller-initiated
+    reversal exists.
+  write_surfaces: []
+  automatic_adjustments:
+  - operation: POST /api/v1/generate
+    behaviour: >-
+      "unused quota for any shortfall is refunded automatically" when fewer qualifying
+      papers are found than the requested `limit`.
+    caller_initiated: false
+    window: not stated
+    source: https://accuracite.com/api-docs
+  - operation: POST /api/v1/verify (texts batch)
+    behaviour: >-
+      A batch that cannot be covered by the remaining balance is rejected whole with
+      429 and "nothing is charged or processed" — a pre-commit rejection, not a reversal.
+    caller_initiated: false
+    window: not applicable
+    source: https://accuracite.com/api-docs
+  billing_reversibility:
+    refunds: >-
+      "Payments are final and non-refundable" (pricing page). Cancellation stops future
+      billing and access continues to the end of the paid period. This is a commercial
+      term, not an API operation.
+    source: https://accuracite.com/pricing
+dry_run_mode:
+  supported: false
+  na: true
+  note: >-
+    No sandbox, test key, or dry-run flag is published, so an agent cannot rehearse a
+    call without spending a credit. Read-only, so the consequence of a live call is a
+    credit, not a state change.

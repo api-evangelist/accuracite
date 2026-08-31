@@ -1,0 +1,62 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+docs: https://accuracite.com/api-docs
+format: proprietary
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape: '{"error": "<human-readable message>"}'
+  fields:
+  - name: error
+    type: string
+    description: Single human-readable message. No machine-readable code, type URI or field pointer.
+  observed:
+    probe: POST https://accuracite.com/api/v1/verify with no X-API-Key
+    date: '2026-08-31'
+    http_status: 401
+    content_type: application/json
+    body: '{"error":"Unauthorized. Please provide a valid X-API-Key header."}'
+  note: >-
+    Not RFC 9457 — the response is application/json, not application/problem+json, and
+    carries no type/title/status/detail/instance members. An agent has to match on
+    prose, or on the HTTP status alone, to branch on failure.
+problem_types:
+- status: 400
+  title: Invalid request body
+  cause: >-
+    Missing or invalid `text` or `texts`, both fields provided at once, or a non-string
+    item inside `texts`.
+  remediation: Send exactly one of `text` (string) or `texts` (array of strings).
+  endpoints: [POST /api/v1/verify]
+- status: 401
+  title: Unauthorized
+  cause: Missing or invalid X-API-Key header.
+  remediation: Send a valid key in X-API-Key.
+  endpoints: [POST /api/v1/verify, POST /api/v1/generate]
+  verified: probed 2026-08-31
+- status: 403
+  title: Plan does not include API access
+  cause: The key is valid but the account is not on a plan that includes the REST API.
+  remediation: Upgrade to Pro or Bulk Verification.
+  endpoints: [POST /api/v1/verify, POST /api/v1/generate]
+- status: 413
+  title: Payload too large
+  cause: A citation exceeds 2,000 characters, or `texts` exceeds 10 items.
+  remediation: Split the batch into chunks of 10 or fewer, each citation under 2,000 characters.
+  endpoints: [POST /api/v1/verify]
+- status: 429
+  title: Rate limit or credit limit reached
+  cause: >-
+    Either the per-minute rate limit (60/min verify, 30/min generate) or an exhausted
+    credit balance. For a `texts` batch this rejects the WHOLE batch, and nothing is
+    charged or processed.
+  remediation: >-
+    Back off and retry for the rate-limit case; top up the plan for the credit case. The
+    API does not distinguish the two, and returns no Retry-After header.
+  endpoints: [POST /api/v1/verify, POST /api/v1/generate]
+gaps:
+- No error codes or type URIs — only HTTP status plus a prose message.
+- 429 conflates rate limiting with credit exhaustion, which need opposite client behaviour.
+- No Retry-After on 429.
+- No 5xx behaviour documented.

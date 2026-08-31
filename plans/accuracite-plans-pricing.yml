@@ -1,0 +1,103 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/pricing
+currency: USD
+plan_count: 5
+billing:
+  processor: LemonSqueezy
+  cancellation: >-
+    Cancel any time from account settings; access continues to the end of the paid
+    period.
+  refunds: >-
+    "Payments are final and non-refundable." Canceling stops future billing only.
+  source: https://accuracite.com/pricing
+credit_model:
+  unit: credit
+  shared_pool: true
+  costs:
+  - action: verify a citation
+    credits: 1
+  - action: find a citation for a claim
+    credits: 4
+  note: >-
+    One pool covers both verification and source-finding; generate refunds unused
+    quota automatically when it returns fewer citations than the requested limit.
+plans:
+- name: Free
+  price: 0
+  currency: USD
+  period: month
+  quota: 50 credits / month
+  api_access: false
+  pdf_parsing: false
+  features:
+  - Standard support
+  card_claims:
+  - PDF Document Parsing
+  - REST API Access
+  note: >-
+    The plan card lists "REST API Access" and "PDF Document Parsing", but the pricing
+    FAQ on the same page contradicts it twice: "Does the free plan include API access?
+    No — API access requires the Pro or Bulk Verification plan" and "the free plan
+    works from pasted citation text, BibTeX, or RIS files". The API reference agrees
+    ("API access requires a Pro plan"). Recorded as api_access false on the strength of
+    two of the provider's own statements; the plan card is the outlier.
+- name: Pro
+  price: 9.99
+  currency: USD
+  period: month
+  annual_price: 79.99
+  annual_period: year
+  annual_effective_monthly: 6.67
+  quota: 1000 credits / month
+  api_access: true
+  features:
+  - Priority support
+  - PDF document parsing
+  - REST API access
+- name: Bulk Verification
+  price: 19.99
+  currency: USD
+  period: month
+  annual_price: 159.99
+  annual_period: year
+  annual_effective_monthly: 13.33
+  quota: 10000 credits / month
+  api_access: true
+  features:
+  - Priority support
+  - PDF document parsing
+  - 'Bulk upload: up to 30 PDFs in one job'
+  - REST API access
+- name: 7-Day Pro Pass
+  price: 4.99
+  currency: USD
+  period: one-time
+  duration: 7 days
+  quota: 350 credits for the week
+  api_access: unknown
+  features:
+  - PDF document parsing
+  - No recurring subscription
+  note: The pass cards do not state whether API access is included.
+- name: 7-Day Bulk Pass
+  price: 9.99
+  currency: USD
+  period: one-time
+  duration: 7 days
+  quota: 3000 credits for the week
+  api_access: unknown
+  features:
+  - PDF document parsing
+  - Multi-file batch scan support
+  note: The pass cards do not state whether API access is included.
+overage:
+  documented: false
+  note: >-
+    No overage or top-up pricing is published. Running out of credits surfaces as a
+    429 on the API rather than as billable overage.
+enterprise:
+  contact_sales: false
+  note: >-
+    No enterprise or "contact us" tier. The /for-publishers page markets editorial
+    reference checking but routes to the same self-serve plans.

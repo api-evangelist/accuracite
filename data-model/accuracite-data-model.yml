@@ -1,0 +1,97 @@
+generated: '2026-08-31'
+method: searched
+source: https://accuracite.com/api-docs
+note: >-
+  Derived from the response field tables published in the API reference, not from an
+  OpenAPI — AccuraCite publishes no machine-readable spec. Every field below is named
+  verbatim in the docs.
+entities:
+- name: VerificationResult
+  returned_by: POST /api/v1/verify
+  description: Outcome of checking one citation string against the academic indexes.
+  fields:
+  - name: verification_status
+    type: string
+    enum: [verified, mismatch, not_found]
+    required: true
+  - name: mismatches
+    type: string[]
+    description: >-
+      Present only when verification_status is mismatch. Any of: title, author, year,
+      DOI, journal, volume, issue, page.
+  - name: reason
+    type: string|null
+    description: Set for some not_found results (e.g. a dead URL); otherwise null.
+  - name: source
+    type: string|null
+    description: >-
+      Which index supplied `citation`. One of OpenAlex, Crossref, Semantic Scholar,
+      PubMed, DBLP, arXiv, CORE, Google Scholar, "Publisher Metadata", or
+      "URL Direct Check" (the last two mean a URL was fetched directly instead of
+      matched against a bibliographic record).
+  - name: citation
+    type: Citation|null
+- name: BatchVerificationResult
+  returned_by: POST /api/v1/verify (when `texts` is used)
+  description: Wrapper returned for a batch request.
+  fields:
+  - name: results
+    type: VerificationResult[]
+    description: One per input citation, in the same order as the input array.
+- name: GenerationResult
+  returned_by: POST /api/v1/generate
+  description: Real papers whose abstracts support a supplied claim.
+  fields:
+  - name: citations
+    type: Citation[]
+    description: >-
+      Up to `limit` entries; may be shorter or empty when fewer qualifying papers exist.
+- name: Citation
+  description: A bibliographic record, shared by both endpoints.
+  fields:
+  - {name: title, type: string}
+  - {name: author, type: string}
+  - {name: doi, type: string|null}
+  - {name: url, type: string|null}
+  - {name: year, type: string|null}
+  - {name: bibtex_entry_type, type: string}
+  - {name: volume, type: string|null}
+  - {name: issue, type: string|null}
+  - {name: page, type: string|null}
+  - {name: publisher, type: string|null}
+  - {name: container_title, type: string|null}
+  - {name: abstract, type: string|null}
+relationships:
+- from: VerificationResult
+  to: Citation
+  kind: has_one
+  via: citation
+  nullable: true
+  caveat: >-
+    A populated `citation` does NOT imply a match — on not_found it is the closest
+    candidate. Branch on verification_status.
+- from: BatchVerificationResult
+  to: VerificationResult
+  kind: has_many
+  via: results
+- from: GenerationResult
+  to: Citation
+  kind: has_many
+  via: citations
+identifiers:
+- name: doi
+  scheme: DOI (ISO 26324)
+  note: The primary cross-system identifier the API emits and consumes.
+- name: url
+  scheme: URL
+  note: >-
+    Accepted as INPUT too — a bare URL may be passed as the citation, in which case
+    AccuraCite fetches the page and confirms the title/author text appears on it rather
+    than matching a bibliographic record.
+- name: bibtex_entry_type
+  scheme: BibTeX entry type
+no_id_prefixes: true
+no_persistent_resources: >-
+  The API returns no AccuraCite-owned identifiers. There are no accounts, jobs,
+  reports or documents addressable over the REST API — every call is stateless and
+  returns third-party bibliographic data. There is nothing to GET back later.

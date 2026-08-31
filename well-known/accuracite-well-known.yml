@@ -1,0 +1,49 @@
+generated: '2026-08-31'
+method: probed
+source: live GET probes of /.well-known/* on accuracite.com
+note: >-
+  Every named path was probed once on 2026-08-31 and every one returned a genuine
+  404 (Werkzeug "404 Not Found" body, 207 bytes) — not an SPA catch-all, so these
+  are real absences rather than false negatives. No WellKnown or SecurityTxt
+  pointer is wired into apis.yml, because nothing here is served.
+hosts:
+- host: accuracite.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    file: null
+other_hosts_probed:
+- host: www.accuracite.com
+  result: NXDOMAIN (apex only; no www record)
+- host: api.accuracite.com
+  result: NXDOMAIN
+- host: docs.accuracite.com
+  result: NXDOMAIN
+- host: mcp.accuracite.com
+  result: NXDOMAIN
+- host: status.accuracite.com
+  result: NXDOMAIN
