@@ -1,0 +1,35 @@
+aid: accuracite
+name: AccuraCite
+type: Index
+kind: company
+visibility: Public
+description: AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they
+  are published.
+created: '2026-08-31'
+modified: '2026-08-31'
+specificationVersion: '0.23'
+tags:
+- Citations
+- Research
+- Bibliography
+- Academic
+- Verification
+- AI Safety
+apis:
+- name: AccuraCite API
+  description: 'REST API for citation verification and claim-to-source lookup. Endpoints named in the provider''s own llms.txt:
+    POST /api/v1/verify (verify a single citation string) and POST /api/v1/generate (find real literature supporting a claim).
+    PARKED by the gate as low confidence -- a false negative: accuracite.com serves a 4KB llms.txt that names the API section,
+    the docs page and both endpoints explicitly. No apis.json or OpenAPI is published. Verified 2026-08-31.'
+  humanURL: https://accuracite.com/api-docs
+  baseURL: https://accuracite.com/api/v1
+  tags:
+  - Citations
+  - Verification
+  properties:
+  - type: Documentation
+    url: https://accuracite.com/api-docs
+  - type: LLMsTxt
+    url: https://accuracite.com/llms.txt
+  - type: Pricing
+    url: https://accuracite.com/pricing
