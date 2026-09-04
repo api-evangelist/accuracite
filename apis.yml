@@ -13,6 +13,21 @@ description: >-
   over a small synchronous REST API (POST /api/v1/verify and POST /api/v1/generate) keyed by an X-API-Key
   header and metered from a shared monthly credit pool. AccuraCite is a solo-founder product built by a
   computer-science PhD after finding fabricated citations in a co-authored, partly AI-drafted paper.
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  - rate-limits
+  - security
+  generated: '2026-09-03'
+  method: derived
 created: '2026-08-31'
 modified: '2026-08-31'
 specificationVersion: '0.23'
