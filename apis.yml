@@ -14,7 +14,7 @@ description: >-
   header and metered from a shared monthly credit pool. AccuraCite is a solo-founder product built by a
   computer-science PhD after finding fabricated citations in a co-authored, partly AI-drafted paper.
 created: '2026-08-31'
-modified: '2026-08-31'
+modified: '2026-09-04'
 specificationVersion: '0.23'
 image: https://accuracite.com/static/img/og-image.png
 maintainers:
@@ -36,10 +36,10 @@ apis:
     up to 10) against eight academic indexes and returns verified / mismatch / not_found with the matched
     record, and /api/v1/generate returns real papers whose abstracts support a supplied claim. Documented rate
     limits are 60/min verify and 30/min generate, metered from a shared credit pool (1 credit per verify, 4
-    per generated citation); API access requires the Pro or Bulk Verification plan. No OpenAPI is published --
-    /openapi.json, /openapi.yaml, /swagger.json, /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json
-    all returned 404 on 2026-08-31, as did every /.well-known/ path -- so the API reference at /api-docs is
-    the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative:
+    per generated citation); API access requires the Pro or Bulk Verification plan. An OpenAPI 3.1 contract
+    covering both operations -- full request/response schemas, examples, and every documented error response --
+    is published at https://accuracite.com/openapi.json as of 2026-09-04, linked from the /api-docs page.
+    Originally PARKED by the apis.io gate as low confidence on 2026-08-31, which was a false negative:
     accuracite.com serves a 4KB llms.txt naming the docs page and both endpoints explicitly.
   humanURL: https://accuracite.com/api-docs
   baseURL: https://accuracite.com/api/v1
@@ -51,6 +51,8 @@ apis:
     url: https://accuracite.com/api-docs
   - type: APIReference
     url: https://accuracite.com/api-docs
+  - type: OpenAPI
+    url: https://accuracite.com/openapi.json
   - type: LLMsTxt
     url: https://accuracite.com/llms.txt
   - type: Pricing
