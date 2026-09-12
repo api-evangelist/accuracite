@@ -71,6 +71,8 @@ apis:
   - type: Pricing
     url: https://accuracite.com/pricing
 common:
+- type: Website
+  url: https://accuracite.com/
 - type: DomainSecurity
   url: security/accuracite-domain-security.yml
 - type: LLMsTxt
