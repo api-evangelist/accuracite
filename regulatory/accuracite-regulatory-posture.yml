@@ -1,0 +1,41 @@
+generated: '2026-09-28'
+method: probed
+source:
+  - https://accuracite.com/privacy
+signals:
+  data_subject_request:
+    evidence:
+      - source: https://accuracite.com/privacy
+        http_status: 200
+        fetched: /tmp/privacy.html
+        quote: "The right to access – You have the right to request copies of your personal data."
+        section: "8. GDPR Data Protection Rights"
+        note: Provides right of access to personal data.
+      - source: https://accuracite.com/privacy
+        http_status: 200
+        fetched: /tmp/privacy.html
+        quote: "The right to erasure – You have the right to request that we erase your personal data, under certain conditions."
+        section: "8. GDPR Data Protection Rights"
+        note: Provides right to deletion.
+      - source: https://accuracite.com/privacy
+        http_status: 200
+        fetched: /tmp/privacy.html
+        quote: "The right to rectification – You have the right to request that we correct any information you believe is inaccurate."
+        section: "8. GDPR Data Protection Rights"
+        note: Provides right to correction.
+  data_retention:
+    evidence:
+      - source: https://accuracite.com/privacy
+        http_status: 200
+        fetched: /tmp/privacy.html
+        quote: "We do not permanently store the full text of PDF files uploaded for verification. Files are processed in memory or temporary storage and are discarded after the verification job is complete."
+        section: "10. Data Retention"
+        note: Describes limited retention of uploaded files.
+  subprocessors:
+    evidence:
+      - source: https://accuracite.com/privacy
+        http_status: 200
+        fetched: /tmp/privacy.html
+        quote: "We also use LemonSqueezy to process subscription payments; AccuraCite does not directly handle or store your payment card details. These providers process data according to their own privacy policies."
+        section: "6. Third-Party Services & Academic Databases"
+        note: Mentions third‑party payment processor as a subprocessors.

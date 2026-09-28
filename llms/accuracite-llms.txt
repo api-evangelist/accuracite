@@ -1,17 +1,25 @@
 # AccuraCite
 
-> AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they reach your paper. Citations are checked against 7 academic databases (OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, and more) and each is returned as verified, mismatched, or not found.
+> AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they reach your paper. Citations are checked against 6 academic databases (OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv) and each is returned as verified, mismatched, or not found.
 
 ## Product
 
 - [Home](https://accuracite.com/): Overview of bibliography verification and claim-to-source lookup.
 - [Verify a Bibliography](https://accuracite.com/ai-citation-checker): Paste text or upload a PDF to check every citation in a reference list against academic indexes.
 - [Find Sources for a Claim](https://accuracite.com/find-sources-for-claim): Given a claim or sentence, returns real papers whose abstracts actually support it, not just title matches.
+- [IEEE Citation Generator](https://accuracite.com/ieee-citation-generator): Paste a reference and get it verified and formatted in IEEE style.
+- [Chicago Citation Generator](https://accuracite.com/chicago-citation-generator): Paste a reference and get it verified and formatted in Chicago style.
+- [Vancouver Citation Generator](https://accuracite.com/vancouver-citation-generator): Paste a reference and get it verified and formatted in Vancouver style.
 - [How It Works](https://accuracite.com/how-it-works): Explanation of the verification pipeline and cross-provider consensus logic.
 - [Pricing](https://accuracite.com/pricing): Free and paid plan details and usage quotas.
 
 ## Blog
 
+- [AccuraCite Now Has an MCP Server](https://accuracite.com/blog/accuracite-mcp-server-for-claude-and-cursor): AccuraCite now ships an MCP server for Claude, Cursor, and other MCP clients — the consensus verification engine, not a single tool call, exposed over MCP.
+- [We Benchmarked AccuraCite's Citation Finder Against Raw AI — Here's What We Found](https://accuracite.com/blog/how-accurate-is-accuracite-at-finding-citations): We tested AccuraCite's Find Citations feature against a naive AI answer and a naive title match, on claims about obscure, recent research. The grounded pipeline won by a wide margin.
+- [What Is a Retracted Citation, and Why 'Verified' Doesn't Mean Safe to Cite](https://accuracite.com/blog/what-is-a-retracted-citation-and-why-verified-doesnt-mean-safe-to-cite): A citation can be 100% real, correctly matched, and still be a paper you shouldn't cite. Here's what a retraction is, how AccuraCite detects it across three databases, and two real cases that prove it works.
+- [What Is DOI Verification, and Why a Real DOI Isn't Enough](https://accuracite.com/blog/what-is-doi-verification-and-why-it-matters): A DOI that resolves isn't proof a citation is real. Here's what DOI verification actually checks, the ways a DOI can be wrong, and how to check one properly.
+- [AccuraCite Catches 99.4% of Fake Citations — Here's the Leak-Free Benchmark](https://accuracite.com/blog/how-accurate-is-accuracite-a-leak-free-benchmark): We tested AccuraCite against 918 real citations, including citations built specifically to be hard to catch. It caught 99.4% of the fakes.
 - [How to Check Citations as a Peer Reviewer (Before You Sign Off)](https://accuracite.com/blog/how-to-check-citations-as-a-peer-reviewer): Reviewers rarely have time to check 60 references by hand. Here's how to bulk-verify a manuscript's citations before you submit your review.
 - [The Best AI Citation Checkers in 2026: What We Could Actually Verify](https://accuracite.com/blog/best-ai-citation-checker-tools): We compared AccuraCite, Citely, GPTZero, and CiteTrue as citation checkers, verifying vendor claims directly instead of repeating unconfirmed numbers.
 - [How to Find Sources for a Claim When AI Can't Back It Up](https://accuracite.com/blog/how-to-find-sources-for-a-claim-ai-cant-back-up): Asking ChatGPT for a source often returns a hallucinated citation or a real paper that doesn't back your claim. Here's how to find sources that actually do.
@@ -26,6 +34,8 @@
 - [API Documentation](https://accuracite.com/api-docs): REST API reference, authentication, and rate limits.
 - `POST https://accuracite.com/api/v1/verify`: Verify a single citation string; returns a verified / mismatch / not_found status. Requires an `X-API-Key` header.
 - `POST https://accuracite.com/api/v1/generate`: Find real literature supporting a given claim. Requires an `X-API-Key` header.
+- [OpenAPI spec](https://accuracite.com/openapi.json): Machine-readable OpenAPI 3.1 contract for both endpoints above.
+- [APIs.json index](https://accuracite.com/apis.json): Self-hosted APIs.json (apisjson.org) description of this API.
 
 ## Optional
 

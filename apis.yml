@@ -1,18 +1,21 @@
 aid: accuracite
+
 name: AccuraCite
+
 type: Index
+
 kind: company
+
 visibility: Public
-description: >-
-  AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they
-  are published. Every citation supplied as raw text, BibTeX, RIS or an uploaded PDF is checked against eight
-  academic indexes -- OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, CORE and Google Scholar --
-  and returned as verified, mismatch or not_found, with the matched bibliographic record and a field-level
-  list of what disagreed. A second surface runs the other direction: given a claim, it returns real papers
-  whose abstracts actually support it rather than papers whose titles merely look related. Both are exposed
-  over a small synchronous REST API (POST /api/v1/verify and POST /api/v1/generate) keyed by an X-API-Key
-  header and metered from a shared monthly credit pool. AccuraCite is a solo-founder product built by a
-  computer-science PhD after finding fabricated citations in a co-authored, partly AI-drafted paper.
+
+description: 'AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they are published. Every
+  citation supplied as raw text, BibTeX, RIS or an uploaded PDF is checked against eight academic indexes -- OpenAlex, Crossref, Semantic Scholar,
+  PubMed, DBLP, arXiv, CORE and Google Scholar -- and returned as verified, mismatch or not_found, with the matched bibliographic record and a
+  field-level list of what disagreed. A second surface runs the other direction: given a claim, it returns real papers whose abstracts actually
+  support it rather than papers whose titles merely look related. Both are exposed over a small synchronous REST API (POST /api/v1/verify and
+  POST /api/v1/generate) keyed by an X-API-Key header and metered from a shared monthly credit pool. AccuraCite is a solo-founder product built
+  by a computer-science PhD after finding fabricated citations in a co-authored, partly AI-drafted paper.'
+
 accessModel:
   pricing: freemium
   onboarding: self-serve
@@ -28,14 +31,20 @@ accessModel:
   - security
   generated: '2026-09-03'
   method: derived
+
 created: '2026-08-31'
+
 modified: '2026-08-31'
+
 specificationVersion: '0.23'
+
 image: https://accuracite.com/static/img/og-image.png
+
 maintainers:
 - FN: AccuraCite Support
   email: support@accuracite.com
   x-url: https://accuracite.com/feedback
+
 tags:
 - Citations
 - Research
@@ -43,34 +52,22 @@ tags:
 - Academic
 - Verification
 - AI Safety
-apis:
-- name: AccuraCite API
-  description: >-
-    Synchronous REST API for citation verification and claim-to-source lookup. Two operations, both POST and
-    both keyed by an X-API-Key header: /api/v1/verify checks a citation string (or a bare URL, or a batch of
-    up to 10) against eight academic indexes and returns verified / mismatch / not_found with the matched
-    record, and /api/v1/generate returns real papers whose abstracts support a supplied claim. Documented rate
-    limits are 60/min verify and 30/min generate, metered from a shared credit pool (1 credit per verify, 4
-    per generated citation); API access requires the Pro or Bulk Verification plan. No OpenAPI is published --
-    /openapi.json, /openapi.yaml, /swagger.json, /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json
-    all returned 404 on 2026-08-31, as did every /.well-known/ path -- so the API reference at /api-docs is
-    the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative:
-    accuracite.com serves a 4KB llms.txt naming the docs page and both endpoints explicitly.
-  humanURL: https://accuracite.com/api-docs
-  baseURL: https://accuracite.com/api/v1
-  tags:
-  - Citations
-  - Verification
-  properties:
-  - type: Documentation
-    url: https://accuracite.com/api-docs
-  - type: APIReference
-    url: https://accuracite.com/api-docs
-  - type: LLMsTxt
-    url: https://accuracite.com/llms.txt
-  - type: Pricing
-    url: https://accuracite.com/pricing
+
 common:
+- type: AgenticAccess
+  url: agentic-access/accuracite-agentic-access.yml
+- type: Spectral
+  url: rules/accuracite-rules.yml
+- type: Security
+  url: security/accuracite-vulnerability-disclosure.yml
+- type: Hosts
+  url: hosts/accuracite-hosts.yml
+- type: Vendors
+  url: vendors/accuracite-vendors.yml
+- type: GitHubOrganization
+  url: https://github.com/AccuraCite
+- type: VulnerabilityDisclosure
+  url: security/accuracite-vulnerability-disclosure.yml
 - type: Website
   url: https://accuracite.com/
 - type: DomainSecurity
@@ -109,16 +106,48 @@ common:
   url: https://accuracite.com/terms
 - type: PrivacyPolicy
   url: https://accuracite.com/privacy
-x-enrichment:
-  date: '2026-08-31'
-  status: enriched
-  artifacts_added: 13
-  pass: local-v1
+- type: ApiCatalog
+  url: https://accuracite.com/.well-known/api-catalog
+- type: SecurityTxt
+  url: https://accuracite.com/.well-known/security.txt
+
+apis:
+- name: AccuraCite API
+  description: 'Synchronous REST API for citation verification and claim-to-source lookup. Two operations, both POST and both keyed by an X-API-Key
+    header: /api/v1/verify checks a citation string (or a bare URL, or a batch of up to 10) against eight academic indexes and returns verified
+    / mismatch / not_found with the matched record, and /api/v1/generate returns real papers whose abstracts support a supplied claim. Documented
+    rate limits are 60/min verify and 30/min generate, metered from a shared credit pool (1 credit per verify, 4 per generated citation); API
+    access requires the Pro or Bulk Verification plan. OpenAPI spec is published at https://accuracite.com/openapi.json. /openapi.json, /openapi.yaml,
+    /swagger.json, /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json all returned 404 on 2026-08-31, as did every /.well-known/ path
+    -- so the API reference at /api-docs is the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative:
+    accuracite.com serves a 4KB llms.txt naming the docs page and both endpoints explicitly.'
+  humanURL: https://accuracite.com/api-docs
+  baseURL: https://accuracite.com/api/v1
+  tags:
+  - Citations
+  - Verification
+  properties:
+  - type: Documentation
+    url: https://accuracite.com/api-docs
+  - type: APIReference
+    url: https://accuracite.com/api-docs
+  - type: LLMsTxt
+    url: https://accuracite.com/llms.txt
+  - type: Pricing
+    url: https://accuracite.com/pricing
+  aid: accuracite:accuracite-api
+
 x-correction-request:
   requested: '2026-09-28'
   source:
   - https://github.com/api-evangelist/accuracite/pull/1
-  request: 'PR #1 (DoanThu, 2026-09-04), verified live 2026-09-28: AccuraCite publishes an OpenAPI at https://accuracite.com/openapi.json
-    (OpenAPI 3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull
-    it into openapi/, add the OpenAPI pointer and remove ''No OpenAPI is published''. Also live: https://accuracite.com/apis.json,
-    /.well-known/api-catalog (linkset, points at the OpenAPI), /.well-known/security.txt.'
+  request: 'PR #1 (DoanThu, 2026-09-04), verified live 2026-09-28: AccuraCite publishes an OpenAPI at https://accuracite.com/openapi.json (OpenAPI
+    3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull it into openapi/, add the OpenAPI pointer
+    and remove ''OpenAPI is published''. Also live: https://accuracite.com/apis.json, /.well-known/api-catalog (linkset, points at the OpenAPI),
+    /.well-known/security.txt.'
+x-enrichment:
+  date: '2026-09-28'
+  status: enriched
+  artifacts_added: 7
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

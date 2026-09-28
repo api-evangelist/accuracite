@@ -27,6 +27,7 @@ versioning:
   header_negotiation: false
   see: lifecycle/accuracite-lifecycle.yml
 idempotency:
+  coverage: none
   supported: false
   header: null
   na: true

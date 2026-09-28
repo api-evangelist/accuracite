@@ -1,6 +1,7 @@
 generated: '2026-08-31'
 method: searched
 source: https://accuracite.com/api-docs
+name: AccuraCite API Rate Limits
 docs: https://accuracite.com/api-docs
 limit_count: 2
 limits:

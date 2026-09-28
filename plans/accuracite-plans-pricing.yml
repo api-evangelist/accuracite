@@ -1,6 +1,7 @@
 generated: '2026-08-31'
 method: searched
 source: https://accuracite.com/pricing
+name: AccuraCite API Plans
 currency: USD
 plan_count: 5
 billing:

@@ -3,7 +3,7 @@ method: searched
 source: registry searches, 2026-08-31
 package_count: 0
 official_sdk_count: 0
-packages: []
+
 note: >-
   AccuraCite publishes NO client libraries in any language. The API reference ships
   copy-paste curl and `requests` snippets only, and there is no SDK, CLI, GitHub

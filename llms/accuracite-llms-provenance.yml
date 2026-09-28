@@ -1,0 +1,6 @@
+generated: '2026-09-28'
+method: probed
+generator: harvest-llms.py
+source: https://accuracite.com/llms.txt
+bytes: 6335
+note: saved verbatim; the provider's own document

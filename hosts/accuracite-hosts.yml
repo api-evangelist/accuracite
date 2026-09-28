@@ -1,0 +1,59 @@
+generated: '2026-09-28'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 3
+  own: 2
+  other_domain: 0
+  platform: 1
+  roles:
+  - api
+  - source
+  - website
+hosts:
+- host: accuracite.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Documentation
+  - APIReference
+  - Pricing
+  - Blog
+  - Support
+  - SignUp
+  - TermsOfService
+  - PrivacyPolicy
+  - ApiCatalog
+  - SecurityTxt
+  serves:
+  - api
+  - docs
+  - cdn
+  vendor: cloudflare
+  registrable_domain: accuracite.com
+  role: website
+  relation: own
+- host: api.accuracite.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: accuracite.com
+  role: api
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
