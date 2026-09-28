@@ -114,3 +114,11 @@ x-enrichment:
   status: enriched
   artifacts_added: 13
   pass: local-v1
+x-correction-request:
+  requested: '2026-09-28'
+  source:
+  - https://github.com/api-evangelist/accuracite/pull/1
+  request: 'PR #1 (DoanThu, 2026-09-04), verified live 2026-09-28: AccuraCite publishes an OpenAPI at https://accuracite.com/openapi.json
+    (OpenAPI 3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull
+    it into openapi/, add the OpenAPI pointer and remove ''No OpenAPI is published''. Also live: https://accuracite.com/apis.json,
+    /.well-known/api-catalog (linkset, points at the OpenAPI), /.well-known/security.txt.'
