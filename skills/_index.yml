@@ -1,0 +1,11 @@
+generated: '2026-10-02'
+method: generated
+generator: extract-docs-artifacts.py skills (local)
+source: openapi/accuracite-openapi.json
+skills:
+- file: skills/accuracite-verify-and-generate-citations.md
+  name: accuracite-verify-and-generate-citations
+  api: openapi/accuracite-openapi.json
+  operations:
+  - generateCitations
+  - verifyCitation

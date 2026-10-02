@@ -21,7 +21,7 @@ envelope:
     Not RFC 9457 — the response is application/json, not application/problem+json, and
     carries no type/title/status/detail/instance members. An agent has to match on
     prose, or on the HTTP status alone, to branch on failure.
-problem_types:
+problems:
 - status: 400
   title: Invalid request body
   cause: >-

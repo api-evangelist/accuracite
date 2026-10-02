@@ -29,7 +29,7 @@ plans:
   currency: USD
   period: month
   quota: 50 credits / month
-  api_access: false
+  api_access: true
   pdf_parsing: false
   features:
   - Standard support
@@ -76,7 +76,7 @@ plans:
   period: one-time
   duration: 7 days
   quota: 350 credits for the week
-  api_access: unknown
+  api_access: true
   features:
   - PDF document parsing
   - No recurring subscription
@@ -87,7 +87,7 @@ plans:
   period: one-time
   duration: 7 days
   quota: 3000 credits for the week
-  api_access: unknown
+  api_access: true
   features:
   - PDF document parsing
   - Multi-file batch scan support

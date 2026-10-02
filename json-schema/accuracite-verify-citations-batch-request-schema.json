@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/accuracite/main/json-schema/accuracite-verify-citations-batch-request-schema.json",
+  "title": "VerifyCitationsBatchRequest",
+  "x-generated": "2026-10-02",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/accuracite-openapi.json#/components/schemas/VerifyCitationsBatchRequest",
+  "type": "object",
+  "required": [
+    "citations"
+  ],
+  "properties": {
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/CitationFields"
+      },
+      "description": "A batch of up to 10 structured citations, verified in parallel."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CitationFields": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "description": "Already-structured bib-style fields for one citation -- skips LLM extraction entirely. A few common BibTeX spellings are accepted as aliases: `authors` for `author`, `container_title` for `journal`, `number` for `issue`, `pages` for `page`, `bibtex_entry_type` for `type`. Every value is capped at 500 characters; unrecognized field names are rejected with a 400.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "authors": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for author."
+        },
+        "year": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "doi": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "DOI": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for doi."
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "journal": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "container_title": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for journal."
+        },
+        "volume": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "issue": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "number": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for issue."
+        },
+        "page": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "pages": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for page."
+        },
+        "publisher": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "type": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "BibTeX entry type, e.g. article, book."
+        },
+        "bibtex_entry_type": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alias for type."
+        },
+        "abstract": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

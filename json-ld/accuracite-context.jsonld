@@ -1,0 +1,155 @@
+{
+  "@context": {
+    "@vocab": "https://accuracite.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "accuracite": "https://accuracite.com/schema#",
+    "Citation": "accuracite:Citation",
+    "title": {
+      "@id": "accuracite:title",
+      "@type": "xsd:string"
+    },
+    "author": {
+      "@id": "accuracite:author",
+      "@type": "xsd:string"
+    },
+    "doi": {
+      "@id": "accuracite:doi",
+      "@type": "xsd:string"
+    },
+    "url": {
+      "@id": "accuracite:url",
+      "@type": "@id"
+    },
+    "year": {
+      "@id": "accuracite:year",
+      "@type": "xsd:string"
+    },
+    "bibtex_entry_type": {
+      "@id": "accuracite:bibtex_entry_type",
+      "@type": "xsd:string"
+    },
+    "volume": {
+      "@id": "accuracite:volume",
+      "@type": "xsd:string"
+    },
+    "issue": {
+      "@id": "accuracite:issue",
+      "@type": "xsd:string"
+    },
+    "page": {
+      "@id": "accuracite:page",
+      "@type": "xsd:string"
+    },
+    "publisher": {
+      "@id": "accuracite:publisher",
+      "@type": "xsd:string"
+    },
+    "container_title": {
+      "@id": "accuracite:container_title",
+      "@type": "xsd:string"
+    },
+    "abstract": {
+      "@id": "accuracite:abstract",
+      "@type": "xsd:string"
+    },
+    "VerifySingleRequest": "accuracite:VerifySingleRequest",
+    "text": {
+      "@id": "accuracite:text",
+      "@type": "xsd:string"
+    },
+    "VerifyBatchRequest": "accuracite:VerifyBatchRequest",
+    "texts": {
+      "@id": "accuracite:texts",
+      "@container": "@list"
+    },
+    "CitationFields": "accuracite:CitationFields",
+    "authors": {
+      "@id": "accuracite:authors",
+      "@type": "xsd:string"
+    },
+    "DOI": {
+      "@id": "accuracite:DOI",
+      "@type": "xsd:string"
+    },
+    "journal": {
+      "@id": "accuracite:journal",
+      "@type": "xsd:string"
+    },
+    "number": {
+      "@id": "accuracite:number",
+      "@type": "xsd:string"
+    },
+    "pages": {
+      "@id": "accuracite:pages",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "accuracite:type",
+      "@type": "xsd:string"
+    },
+    "VerifyCitationFieldsRequest": "accuracite:VerifyCitationFieldsRequest",
+    "citation": {
+      "@id": "accuracite:citation",
+      "@type": "@id"
+    },
+    "VerifyCitationsBatchRequest": "accuracite:VerifyCitationsBatchRequest",
+    "citations": {
+      "@id": "accuracite:citations",
+      "@container": "@list"
+    },
+    "VerifyResult": "accuracite:VerifyResult",
+    "verification_status": {
+      "@id": "accuracite:verification_status",
+      "@type": "xsd:string"
+    },
+    "mismatches": {
+      "@id": "accuracite:mismatches",
+      "@container": "@list"
+    },
+    "reason": {
+      "@id": "accuracite:reason",
+      "@type": "xsd:string"
+    },
+    "source": {
+      "@id": "accuracite:source",
+      "@type": "xsd:string"
+    },
+    "retracted": {
+      "@id": "accuracite:retracted",
+      "@type": "xsd:boolean"
+    },
+    "VerifyBatchResponse": "accuracite:VerifyBatchResponse",
+    "results": {
+      "@id": "accuracite:results",
+      "@container": "@list"
+    },
+    "GenerateRequest": "accuracite:GenerateRequest",
+    "limit": {
+      "@id": "accuracite:limit",
+      "@type": "xsd:integer"
+    },
+    "GenerateResponse": "accuracite:GenerateResponse",
+    "Error": "accuracite:Error",
+    "error": {
+      "@id": "accuracite:error",
+      "@type": "xsd:string"
+    },
+    "retry_after_seconds": {
+      "@id": "accuracite:retry_after_seconds",
+      "@type": "xsd:integer"
+    },
+    "credits_reset_at": {
+      "@id": "accuracite:credits_reset_at",
+      "@type": "xsd:dateTime"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "AccuraCite API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects AccuraCite's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-02) from openapi/accuracite-openapi.json.",
+  "dcterms:created": "2026-10-02",
+  "dcterms:source": [
+    "openapi/accuracite-openapi.json"
+  ]
+}

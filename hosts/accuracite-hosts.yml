@@ -1,4 +1,4 @@
-generated: '2026-09-28'
+generated: '2026-10-02'
 method: derived
 source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
 generator: derive-hosts.py
@@ -17,6 +17,8 @@ hosts:
   - pointer
   - apis[]
   - probed
+  - docs-index
+  - spec-found
   - contract-discovery
   - well-known
   - vendor-detect
@@ -35,6 +37,7 @@ hosts:
   serves:
   - api
   - docs
+  - spec
   - cdn
   vendor: cloudflare
   registrable_domain: accuracite.com

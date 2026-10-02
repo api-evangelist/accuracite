@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/accuracite/main/json-schema/accuracite-verify-single-request-schema.json",
+  "title": "VerifySingleRequest",
+  "x-generated": "2026-10-02",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/accuracite-openapi.json#/components/schemas/VerifySingleRequest",
+  "type": "object",
+  "required": [
+    "text"
+  ],
+  "properties": {
+    "text": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "A single raw academic citation string, or a bare URL."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/accuracite/main/json-schema/accuracite-verify-batch-request-schema.json",
+  "title": "VerifyBatchRequest",
+  "x-generated": "2026-10-02",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/accuracite-openapi.json#/components/schemas/VerifyBatchRequest",
+  "type": "object",
+  "required": [
+    "texts"
+  ],
+  "properties": {
+    "texts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "description": "A batch of up to 10 citation strings, verified in parallel."
+    }
+  },
+  "additionalProperties": false
+}

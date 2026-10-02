@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/accuracite/main/json-schema/accuracite-generate-request-schema.json",
+  "title": "GenerateRequest",
+  "x-generated": "2026-10-02",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/accuracite-openapi.json#/components/schemas/GenerateRequest",
+  "type": "object",
+  "required": [
+    "text"
+  ],
+  "properties": {
+    "text": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "The scientific claim or statement you need backed up."
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 1,
+      "description": "Maximum number of citations to retrieve."
+    }
+  },
+  "additionalProperties": false
+}

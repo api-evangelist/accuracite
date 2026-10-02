@@ -1,0 +1,68 @@
+generated: '2026-10-02'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/_original/accuracite-api-openapi.json
+vocabulary:
+  name: AccuraCite Domain Vocabulary
+  description: 'Terms declared by AccuraCite''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-02'
+  terms:
+  - term: Citation
+    definition: 'Object declared by the contract with fields: title, author, doi, url, year, bibtex_entry_type, volume, issue, page, publisher,
+      container_title, abstract.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/Citation
+  - term: VerifySingleRequest
+    definition: 'Object declared by the contract with fields: text.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifySingleRequest
+  - term: VerifyBatchRequest
+    definition: 'Object declared by the contract with fields: texts.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifyBatchRequest
+  - term: CitationFields
+    definition: 'Already-structured bib-style fields for one citation -- skips LLM extraction entirely. A few common BibTeX spellings are accepted
+      as aliases: `authors` for `author`, `container_title` for `journal`, `number` for `issue`, `pages` for `page`, `bibtex_entry_type` for `type`.
+      Every value is capped at 500 characters; unrecognized field names are rejected with a 400.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/CitationFields
+  - term: VerifyCitationFieldsRequest
+    definition: 'Object declared by the contract with fields: citation.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifyCitationFieldsRequest
+  - term: VerifyCitationsBatchRequest
+    definition: 'Object declared by the contract with fields: citations.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifyCitationsBatchRequest
+  - term: VerifyResult
+    definition: 'Object declared by the contract with fields: verification_status, mismatches, reason, source, retracted, citation.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifyResult
+  - term: VerifyBatchResponse
+    definition: 'Object declared by the contract with fields: results.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/VerifyBatchResponse
+  - term: GenerateRequest
+    definition: 'Object declared by the contract with fields: text, limit.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/GenerateRequest
+  - term: GenerateResponse
+    definition: 'Object declared by the contract with fields: citations.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/GenerateResponse
+  - term: Error
+    definition: 'Object declared by the contract with fields: error, retry_after_seconds, credits_reset_at.'
+    tags:
+    - Object
+    source: openapi/_original/accuracite-api-openapi.json#/components/schemas/Error

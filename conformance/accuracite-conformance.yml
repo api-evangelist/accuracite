@@ -45,6 +45,9 @@ standards:
 - id: openapi-3.1
   conforms: true
   evidence: the document declares 3.1.0
+- id: ratelimit-headers
+  conforms: true
+  evidence: responses declare Retry-After
 domain_standards:
 - id: doi
   name: DOI (ISO 26324) digital object identifiers

@@ -1,13 +1,8 @@
 aid: accuracite
-
 name: AccuraCite
-
 type: Index
-
 kind: company
-
 visibility: Public
-
 description: 'AccuraCite verifies bibliographies and finds real citations, catching AI-hallucinated references before they are published. Every
   citation supplied as raw text, BibTeX, RIS or an uploaded PDF is checked against eight academic indexes -- OpenAlex, Crossref, Semantic Scholar,
   PubMed, DBLP, arXiv, CORE and Google Scholar -- and returned as verified, mismatch or not_found, with the matched bibliographic record and a
@@ -15,7 +10,6 @@ description: 'AccuraCite verifies bibliographies and finds real citations, catch
   support it rather than papers whose titles merely look related. Both are exposed over a small synchronous REST API (POST /api/v1/verify and
   POST /api/v1/generate) keyed by an X-API-Key header and metered from a shared monthly credit pool. AccuraCite is a solo-founder product built
   by a computer-science PhD after finding fabricated citations in a co-authored, partly AI-drafted paper.'
-
 accessModel:
   pricing: freemium
   onboarding: self-serve
@@ -31,20 +25,14 @@ accessModel:
   - security
   generated: '2026-09-03'
   method: derived
-
 created: '2026-08-31'
-
 modified: '2026-08-31'
-
 specificationVersion: '0.23'
-
 image: https://accuracite.com/static/img/og-image.png
-
 maintainers:
 - FN: AccuraCite Support
   email: support@accuracite.com
   x-url: https://accuracite.com/feedback
-
 tags:
 - Citations
 - Research
@@ -52,8 +40,19 @@ tags:
 - Academic
 - Verification
 - AI Safety
-
 common:
+- type: JSONLD
+  url: json-ld/accuracite-context.jsonld
+- type: Vocabulary
+  url: vocabulary/accuracite-vocabulary.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: MCPServer
+  url: mcp/accuracite-mcp.yml
+- type: SDKs
+  url: packages/accuracite-packages.yml
+- type: Packages
+  url: packages/accuracite-packages.yml
 - type: AgenticAccess
   url: agentic-access/accuracite-agentic-access.yml
 - type: Spectral
@@ -110,17 +109,16 @@ common:
   url: https://accuracite.com/.well-known/api-catalog
 - type: SecurityTxt
   url: https://accuracite.com/.well-known/security.txt
-
 apis:
 - name: AccuraCite API
   description: 'Synchronous REST API for citation verification and claim-to-source lookup. Two operations, both POST and both keyed by an X-API-Key
     header: /api/v1/verify checks a citation string (or a bare URL, or a batch of up to 10) against eight academic indexes and returns verified
     / mismatch / not_found with the matched record, and /api/v1/generate returns real papers whose abstracts support a supplied claim. Documented
     rate limits are 60/min verify and 30/min generate, metered from a shared credit pool (1 credit per verify, 4 per generated citation); API
-    access requires the Pro or Bulk Verification plan. OpenAPI spec is published at https://accuracite.com/openapi.json. /openapi.json, /openapi.yaml,
-    /swagger.json, /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json all returned 404 on 2026-08-31, as did every /.well-known/ path
-    -- so the API reference at /api-docs is the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative:
-    accuracite.com serves a 4KB llms.txt naming the docs page and both endpoints explicitly.'
+    access is available on all plans. OpenAPI spec is published at https://accuracite.com/openapi.json. /openapi.json, /openapi.yaml, /swagger.json,
+    /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json all returned 404 on 2026-08-31, as did every /.well-known/ path -- so the API
+    reference at /api-docs is the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative: accuracite.com
+    serves a 4KB llms.txt naming the docs page and both endpoints explicitly.'
   humanURL: https://accuracite.com/api-docs
   baseURL: https://accuracite.com/api/v1
   tags:
@@ -135,19 +133,59 @@ apis:
     url: https://accuracite.com/llms.txt
   - type: Pricing
     url: https://accuracite.com/pricing
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-result-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-generate-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citations-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-single-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citation-fields-request-schema.json
   aid: accuracite:accuracite-api
+- aid: accuracite:accuracite-api-api
+  name: AccuraCite API API
+  description: 'Synchronous REST API for citation verification and claim-backed citation finding. Verify a citation string (or small batch) against
 
-x-enrichment:
-  date: '2026-09-28'
-  status: enriched
-  artifacts_added: 7
-  pass: modular-v1
-  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local
+    6 academic databases, or find real literature that supports a given claim. Both endpoints require an X-API-Key header (available on every
+
+    plan, including Free) and draw'
+  humanURL: https://accuracite.com/api-docs
+  baseURL: https://accuracite.com
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/accuracite-api-openapi.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-result-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-generate-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citations-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-single-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citation-fields-request-schema.json
 x-correction-request:
   requested: '2026-10-02'
   source:
   - https://github.com/api-evangelist/accuracite/issues/2
-  request: 'Issue #2 (DoanThu, AccuraCite), verified 2026-10-02. mcp/accuracite-mcp.yml (''ships NO MCP server'', candidate tools) is stale. Verified: npm package accuracite-mcp 0.1.1 (mcpName com.accuracite/accuracite-mcp, bin accuracite-mcp, repository github.com/DoanThu/accuracite mcp-server/), a local stdio server run with npx -y accuracite-mcp and ACCURACITE_API_KEY; its published source registers exactly two tools: verify_citation (text, 1-2000 chars -> POST /api/v1/verify) and find_citations (claim, 1-5000 chars; limit 1-10 -> POST /api/v1/generate); no batch tool. Smithery listing https://smithery.ai/servers/accuracite/accuracite-mcp is 200 and names both tools; https://accuracite.com/api-docs has an ''MCP Server'' section with the npx config; announcement https://accuracite.com/blog/accuracite-mcp-server-for-claude-and-cursor is 200 (an invented /blog path returns a real 404). Replace the candidate MCP record with the real local server and these two tools (verify_citation_batch and find_sources_for_claim do not exist - drop them). AUTH/PLAN: https://accuracite.com/pricing FAQ says API access is on every plan including Free via X-API-Key from the shared monthly credit pool; the Free plan lists REST API Access. Change plan_required from ''Pro or Bulk Verification'' to all plans. Not verified: the official MCP Registry entry (registry.modelcontextprotocol.io timed out from here) - re-check it on reprofile and record it only if it answers. There is no hosted/remote MCP endpoint, so do not record one. Re-evaluate the ''parked - low confidence'' status with these artifacts plus the OpenAPI from the earlier request.'
+  request: 'Issue #2 (DoanThu, AccuraCite), verified 2026-10-02. mcp/accuracite-mcp.yml (''ships NO MCP server'', candidate tools) is stale. Verified:
+    npm package accuracite-mcp 0.1.1 (mcpName com.accuracite/accuracite-mcp, bin accuracite-mcp, repository github.com/DoanThu/accuracite mcp-server/),
+    a local stdio server run with npx -y accuracite-mcp and ACCURACITE_API_KEY; its published source registers exactly two tools: verify_citation
+    (text, 1-2000 chars -> POST /api/v1/verify) and find_citations (claim, 1-5000 chars; limit 1-10 -> POST /api/v1/generate); no batch tool.
+    Smithery listing https://smithery.ai/servers/accuracite/accuracite-mcp is 200 and names both tools; https://accuracite.com/api-docs has an
+    ''MCP Server'' section with the npx config; announcement https://accuracite.com/blog/accuracite-mcp-server-for-claude-and-cursor is 200 (an
+    invented /blog path returns a real 404). Replace the candidate MCP record with the real local server and these two tools (verify_citation_batch
+    and find_sources_for_claim do not exist - drop them). AUTH/PLAN: https://accuracite.com/pricing FAQ says API access is on every plan including
+    Free via X-API-Key from the shared monthly credit pool; the Free plan lists REST API Access. Change plan_required from ''Pro or Bulk Verification''
+    to all plans. Not verified: the official MCP Registry entry (registry.modelcontextprotocol.io timed out from here) - re-check it on reprofile
+    and record it only if it answers. There is no hosted/remote MCP endpoint, so do not record one. Re-evaluate the ''parked - low confidence''
+    status with these artifacts plus the OpenAPI from the earlier request.'
   earlier:
     requested: '2026-09-28'
     source:
@@ -156,3 +194,9 @@ x-correction-request:
       3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull it into openapi/, add the OpenAPI pointer
       and remove ''OpenAPI is published''. Also live: https://accuracite.com/apis.json, /.well-known/api-catalog (linkset, points at the OpenAPI),
       /.well-known/security.txt.'
+x-enrichment:
+  date: '2026-10-02'
+  status: enriched
+  artifacts_added: 12
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

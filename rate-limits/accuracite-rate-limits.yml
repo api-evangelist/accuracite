@@ -5,14 +5,16 @@ name: AccuraCite API Rate Limits
 docs: https://accuracite.com/api-docs
 limit_count: 2
 limits:
-- scope: per-key
+- name: POST /api/v1/verify
+  scope: per-key
   endpoint: POST /api/v1/verify
   window: 1m
   limit: 60
   unit: requests
   burst: null
   note: 'Docs: "Verification: 60 requests per minute".'
-- scope: per-key
+- name: POST /api/v1/generate
+  scope: per-key
   endpoint: POST /api/v1/generate
   window: 1m
   limit: 30

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/accuracite/main/json-schema/accuracite-verify-result-schema.json",
+  "title": "VerifyResult",
+  "x-generated": "2026-10-02",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/accuracite-openapi.json#/components/schemas/VerifyResult",
+  "type": "object",
+  "properties": {
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "mismatch",
+        "not_found"
+      ]
+    },
+    "mismatches": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Populated only when verification_status is \"mismatch\". Any of: title, author, year, DOI, journal, volume, issue, page."
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Set for some not_found results (e.g. a dead URL); otherwise null."
+    },
+    "source": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Database that supplied `citation`: OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, or Google Scholar. \"Publisher Metadata\" and \"URL Direct Check\" mean a URL was fetched directly instead."
+    },
+    "retracted": {
+      "type": "boolean",
+      "description": "Independent of verification_status: a citation can be a real, correctly-matched paper (verification_status \"verified\") and still be retracted. Sourced from retraction metadata already published by OpenAlex, Crossref, and PubMed; corroborated the same way the rest of verification is, so any one provider flagging it is enough. False does not mean \"confirmed not retracted\" -- only that none of the providers consulted flagged it."
+    },
+    "citation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Citation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Null only if nothing at all was found. When verification_status is not_found, this may still be populated as the closest candidate match, not a confirmed one — always branch on verification_status, never on whether citation is present."
+    }
+  },
+  "$defs": {
+    "Citation": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "author": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "doi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "year": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bibtex_entry_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "volume": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publisher": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "container_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "abstract": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
