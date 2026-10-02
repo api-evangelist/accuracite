@@ -137,17 +137,22 @@ apis:
     url: https://accuracite.com/pricing
   aid: accuracite:accuracite-api
 
-x-correction-request:
-  requested: '2026-09-28'
-  source:
-  - https://github.com/api-evangelist/accuracite/pull/1
-  request: 'PR #1 (DoanThu, 2026-09-04), verified live 2026-09-28: AccuraCite publishes an OpenAPI at https://accuracite.com/openapi.json (OpenAPI
-    3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull it into openapi/, add the OpenAPI pointer
-    and remove ''OpenAPI is published''. Also live: https://accuracite.com/apis.json, /.well-known/api-catalog (linkset, points at the OpenAPI),
-    /.well-known/security.txt.'
 x-enrichment:
   date: '2026-09-28'
   status: enriched
   artifacts_added: 7
   pass: modular-v1
   engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local
+x-correction-request:
+  requested: '2026-10-02'
+  source:
+  - https://github.com/api-evangelist/accuracite/issues/2
+  request: 'Issue #2 (DoanThu, AccuraCite), verified 2026-10-02. mcp/accuracite-mcp.yml (''ships NO MCP server'', candidate tools) is stale. Verified: npm package accuracite-mcp 0.1.1 (mcpName com.accuracite/accuracite-mcp, bin accuracite-mcp, repository github.com/DoanThu/accuracite mcp-server/), a local stdio server run with npx -y accuracite-mcp and ACCURACITE_API_KEY; its published source registers exactly two tools: verify_citation (text, 1-2000 chars -> POST /api/v1/verify) and find_citations (claim, 1-5000 chars; limit 1-10 -> POST /api/v1/generate); no batch tool. Smithery listing https://smithery.ai/servers/accuracite/accuracite-mcp is 200 and names both tools; https://accuracite.com/api-docs has an ''MCP Server'' section with the npx config; announcement https://accuracite.com/blog/accuracite-mcp-server-for-claude-and-cursor is 200 (an invented /blog path returns a real 404). Replace the candidate MCP record with the real local server and these two tools (verify_citation_batch and find_sources_for_claim do not exist - drop them). AUTH/PLAN: https://accuracite.com/pricing FAQ says API access is on every plan including Free via X-API-Key from the shared monthly credit pool; the Free plan lists REST API Access. Change plan_required from ''Pro or Bulk Verification'' to all plans. Not verified: the official MCP Registry entry (registry.modelcontextprotocol.io timed out from here) - re-check it on reprofile and record it only if it answers. There is no hosted/remote MCP endpoint, so do not record one. Re-evaluate the ''parked - low confidence'' status with these artifacts plus the OpenAPI from the earlier request.'
+  earlier:
+    requested: '2026-09-28'
+    source:
+    - https://github.com/api-evangelist/accuracite/pull/1
+    request: 'PR #1 (DoanThu, 2026-09-04), verified live 2026-09-28: AccuraCite publishes an OpenAPI at https://accuracite.com/openapi.json (OpenAPI
+      3.1.0, ''AccuraCite API'' v1.0.0; /api/v1/verify and /api/v1/generate; linked from /api-docs). Pull it into openapi/, add the OpenAPI pointer
+      and remove ''OpenAPI is published''. Also live: https://accuracite.com/apis.json, /.well-known/api-catalog (linkset, points at the OpenAPI),
+      /.well-known/security.txt.'
