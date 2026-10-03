@@ -1,0 +1,186 @@
+openapi: 3.2.0
+info:
+  title: AccuraCite Generate API
+  version: 1.0.0
+  description: Synchronous REST API for citation verification and claim-backed citation finding.
+  termsOfService: https://accuracite.com/terms
+  contact:
+    email: support@accuracite.com
+servers:
+- url: https://accuracite.com
+  description: Production
+security:
+- ApiKeyAuth: []
+tags:
+- name: Generate
+paths:
+  /api/v1/generate:
+    post:
+      operationId: generateCitations
+      summary: Find real citations that support a claim
+      description: 'Finds real, published literature whose abstract actually supports a given scientific claim or statement — not just a title-keyword match. A retracted paper is never returned, even if its abstract otherwise matches; it''s treated the same as not finding a qualifying paper at all. Can return fewer results than `limit` (or none) if fewer qualifying papers are found; unused quota for any shortfall is refunded automatically. Rate limit: 30 requests/minute per API key.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+            examples:
+              default:
+                value:
+                  text: Transformer architectures rely heavily on self-attention mechanisms
+                  limit: 2
+      responses:
+        '200':
+          description: Up to `limit` real papers whose abstract supports the claim.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateResponse'
+              examples:
+                default:
+                  value:
+                    citations:
+                    - title: Attention is all you need
+                      author: Vaswani A, Shazeer N, Parmar N, ...
+                      doi: 10.48550/arXiv.1706.03762
+                      url: https://arxiv.org/abs/1706.03762
+                      year: '2017'
+                      bibtex_entry_type: article
+                      volume: null
+                      issue: null
+                      page: null
+                      publisher: null
+                      container_title: Advances in Neural Information Processing Systems
+                      abstract: The dominant sequence transduction models...
+        '400':
+          description: Missing `text`, `text` over 5,000 characters, or `limit` not an integer between 1 and 10.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Missing or invalid X-API-Key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: '`text` exceeds 5,000 characters.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit or credit limit reached. A rate-limit response includes a `Retry-After` header and `retry_after_seconds`; a credit-limit response includes `credits_reset_at` (when the pool refills).
+          headers:
+            Retry-After:
+              description: 'Present only on a rate-limit rejection: seconds to wait before retrying.'
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Generate
+components:
+  schemas:
+    GenerateResponse:
+      type: object
+      properties:
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Citation'
+    GenerateRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 5000
+          description: The scientific claim or statement you need backed up.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 1
+          description: Maximum number of citations to retrieve.
+      additionalProperties: false
+    Citation:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+        author:
+          type:
+          - string
+          - 'null'
+        doi:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+        year:
+          type:
+          - string
+          - 'null'
+        bibtex_entry_type:
+          type:
+          - string
+          - 'null'
+        volume:
+          type:
+          - string
+          - 'null'
+        issue:
+          type:
+          - string
+          - 'null'
+        page:
+          type:
+          - string
+          - 'null'
+        publisher:
+          type:
+          - string
+          - 'null'
+        container_title:
+          type:
+          - string
+          - 'null'
+        abstract:
+          type:
+          - string
+          - 'null'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        retry_after_seconds:
+          type: integer
+          description: Present only on a rate-limit (429) rejection.
+        credits_reset_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key from any plan, including Free. Manage keys at https://accuracite.com/api-docs.
+externalDocs:
+  description: Full API documentation with curl and Python examples
+  url: https://accuracite.com/api-docs

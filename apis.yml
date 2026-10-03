@@ -111,14 +111,18 @@ common:
   url: https://accuracite.com/.well-known/security.txt
 apis:
 - name: AccuraCite API
-  description: 'Synchronous REST API for citation verification and claim-to-source lookup. Two operations, both POST and both keyed by an X-API-Key
-    header: /api/v1/verify checks a citation string (or a bare URL, or a batch of up to 10) against eight academic indexes and returns verified
-    / mismatch / not_found with the matched record, and /api/v1/generate returns real papers whose abstracts support a supplied claim. Documented
-    rate limits are 60/min verify and 30/min generate, metered from a shared credit pool (1 credit per verify, 4 per generated citation); API
-    access is available on all plans. OpenAPI spec is published at https://accuracite.com/openapi.json. /openapi.json, /openapi.yaml, /swagger.json,
-    /api/v1/openapi.json, /api-docs.json, /redoc and /apis.json all returned 404 on 2026-08-31, as did every /.well-known/ path -- so the API
-    reference at /api-docs is the only contract. Originally PARKED by the apis.io gate as low confidence, which was a false negative: accuracite.com
-    serves a 4KB llms.txt naming the docs page and both endpoints explicitly.'
+  description: >-
+    Synchronous REST API for citation verification and claim-to-source lookup. Two operations, both POST
+    and both keyed by an X-API-Key header: /api/v1/verify checks a citation string (or a bare URL, or
+    a batch of up to 10) against eight academic indexes and returns verified / mismatch / not_found with
+    the matched record, and /api/v1/generate returns real papers whose abstracts support a supplied claim.
+    Documented rate limits are 60/min verify and 30/min generate, metered from a shared credit pool (1
+    credit per verify, 4 per generated citation); API access is available on all plans. OpenAPI spec is
+    published at https://accuracite.com/openapi.json. /openapi.json, /openapi.yaml, /swagger.json, /api/v1/openapi.json,
+    /api-docs.json, /redoc and /apis.json all returned 404 on 2026-08-31, as did every /.well-known/ path
+    -- so the API reference at /api-docs is the only contract. Originally PARKED by the apis.io gate as
+    low confidence, which was a false negative: accuracite.com serves a 4KB llms.txt naming the docs page
+    and both endpoints explicitly.
   humanURL: https://accuracite.com/api-docs
   baseURL: https://accuracite.com/api/v1
   tags:
@@ -146,18 +150,38 @@ apis:
   - type: JSONSchema
     url: json-schema/accuracite-verify-citation-fields-request-schema.json
   aid: accuracite:accuracite-api
-- aid: accuracite:accuracite-api-api
-  name: AccuraCite API API
-  description: 'Synchronous REST API for citation verification and claim-backed citation finding. Verify a citation string (or small batch) against
-
-    6 academic databases, or find real literature that supports a given claim. Both endpoints require an X-API-Key header (available on every
-
-    plan, including Free) and draw'
+- aid: accuracite:accuracite-generate-api
+  name: AccuraCite Generate API
+  description: The Generate API from AccuraCite — 1 operation(s) for generate.
   humanURL: https://accuracite.com/api-docs
-  baseURL: https://accuracite.com
+  baseURL: https://accuracite.com/api/v1
+  tags:
+  - Generate
   properties:
   - type: OpenAPI
-    url: openapi/_original/accuracite-api-openapi.json
+    url: openapi/accuracite-generate-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-result-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-generate-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citations-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-batch-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-single-request-schema.json
+  - type: JSONSchema
+    url: json-schema/accuracite-verify-citation-fields-request-schema.json
+- aid: accuracite:accuracite-verify-api
+  name: AccuraCite Verify API
+  description: The Verify API from AccuraCite — 1 operation(s) for verify.
+  humanURL: https://accuracite.com/api-docs
+  baseURL: https://accuracite.com/api/v1
+  tags:
+  - Verify
+  properties:
+  - type: OpenAPI
+    url: openapi/accuracite-verify-api-openapi.yml
   - type: JSONSchema
     url: json-schema/accuracite-verify-result-schema.json
   - type: JSONSchema

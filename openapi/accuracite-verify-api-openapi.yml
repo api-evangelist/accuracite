@@ -1,0 +1,393 @@
+openapi: 3.2.0
+info:
+  title: AccuraCite Verify API
+  version: 1.0.0
+  description: Synchronous REST API for citation verification and claim-backed citation finding.
+  termsOfService: https://accuracite.com/terms
+  contact:
+    email: support@accuracite.com
+servers:
+- url: https://accuracite.com
+  description: Production
+security:
+- ApiKeyAuth: []
+tags:
+- name: Verify
+paths:
+  /api/v1/verify:
+    post:
+      operationId: verifyCitation
+      summary: Verify one or a small batch of citations
+      description: 'Checks a citation against 6 academic databases (OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv) to see if it''s accurate, not found, or has mismatches. Provide exactly one of `text`, `texts`, `citation`, or `citations`. `text`/`texts` is a raw citation string (or a batch of up to 10), parsed via LLM extraction; it can be a formatted bibliographic citation or a bare URL -- a URL that isn''t in an academic database is fetched directly and its title/author text is confirmed to appear on the page, rather than matched against a bibliographic record. `citation`/`citations` instead takes already-structured bib-style fields (title/author/year/doi/journal/volume/issue/page/publisher/url/type) and skips the LLM parse entirely -- use this if you already have structured metadata (e.g. from your own .bib file). Batch items are verified in parallel, so response time is close to that of a single citation rather than growing with batch size. Rate limit: 60 requests/minute per API key.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/VerifySingleRequest'
+              - $ref: '#/components/schemas/VerifyBatchRequest'
+              - $ref: '#/components/schemas/VerifyCitationFieldsRequest'
+              - $ref: '#/components/schemas/VerifyCitationsBatchRequest'
+            examples:
+              single:
+                summary: Single citation (raw text)
+                value:
+                  text: Vaswani, A., et al. (2017). Attention is all you need. Advances in neural information processing systems, 30.
+              batch:
+                summary: Batch of citations (raw text)
+                value:
+                  texts:
+                  - Vaswani, A., et al. (2017). Attention is all you need. Advances in neural information processing systems, 30.
+                  - Kuhn, T. S. (1962). The Structure of Scientific Revolutions. University of Chicago Press.
+              structured:
+                summary: Single citation (structured fields, no LLM parse)
+                value:
+                  citation:
+                    title: Attention is all you need
+                    author: Vaswani, Ashish
+                    year: 2017
+                    journal: Advances in Neural Information Processing Systems
+                    volume: '30'
+              structured_batch:
+                summary: Batch of citations (structured fields)
+                value:
+                  citations:
+                  - title: Attention is all you need
+                    author: Vaswani, Ashish
+                    year: 2017
+                  - title: The Structure of Scientific Revolutions
+                    author: Kuhn, T. S.
+                    year: 1962
+      responses:
+        '200':
+          description: 'Verification result. A `text` request returns a single VerifyResult object; a `texts` request returns `{"results": [...]}`, one VerifyResult per input citation, in the same order.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/VerifyResult'
+                - $ref: '#/components/schemas/VerifyBatchResponse'
+              examples:
+                verified:
+                  summary: A real, matched paper
+                  value:
+                    verification_status: verified
+                    mismatches: []
+                    reason: null
+                    source: Semantic Scholar
+                    retracted: false
+                    citation:
+                      title: Attention is all you need
+                      author: Vaswani A, Shazeer N, Parmar N, ...
+                      doi: 10.48550/arXiv.1706.03762
+                      url: https://arxiv.org/abs/1706.03762
+                      year: '2017'
+                      bibtex_entry_type: article
+                      volume: null
+                      issue: null
+                      page: null
+                      publisher: null
+                      container_title: Advances in Neural Information Processing Systems
+                      abstract: The dominant sequence transduction models...
+                retracted:
+                  summary: A real, matched paper that has been retracted
+                  value:
+                    verification_status: verified
+                    mismatches: []
+                    reason: null
+                    source: OpenAlex
+                    retracted: true
+                    citation:
+                      title: 'RETRACTED: Ileal-lymphoid-nodular hyperplasia, non-specific colitis, and pervasive developmental disorder in children'
+                      doi: 10.1016/S0140-6736(97)11096-0
+                      year: '1998'
+                not_found:
+                  summary: No confident match
+                  value:
+                    verification_status: not_found
+                    mismatches: []
+                    reason: null
+                    source: OpenAlex
+                    retracted: false
+                    citation:
+                      title: A closest-match paper title, unrelated to what you sent
+                batch:
+                  summary: Batch response
+                  value:
+                    results:
+                    - verification_status: verified
+                      mismatches: []
+                      reason: null
+                      source: Crossref
+                      retracted: false
+                      citation:
+                        title: Attention is all you need
+                    - verification_status: verified
+                      mismatches: []
+                      reason: null
+                      source: OpenAlex
+                      retracted: false
+                      citation:
+                        title: The Structure of Scientific Revolutions
+        '400':
+          description: None or more than one of `text`/`texts`/`citation`/`citations` provided, a non-string item in `texts`, a missing `title` or unrecognized field name in `citation`/`citations`, or a field value over 500 characters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Missing or invalid X-API-Key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: A citation exceeds 2,000 characters, or `texts`/`citations` exceeds 10 items.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit or credit limit reached. For a batch, the whole batch is rejected atomically if the credit balance can't cover every item — nothing is charged or processed. A rate-limit response includes a `Retry-After` header and `retry_after_seconds`; a credit-limit response includes `credits_reset_at` (when the pool refills).
+          headers:
+            Retry-After:
+              description: 'Present only on a rate-limit rejection: seconds to wait before retrying.'
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Verify
+components:
+  schemas:
+    VerifyCitationFieldsRequest:
+      type: object
+      required:
+      - citation
+      properties:
+        citation:
+          $ref: '#/components/schemas/CitationFields'
+      additionalProperties: false
+    VerifyCitationsBatchRequest:
+      type: object
+      required:
+      - citations
+      properties:
+        citations:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/CitationFields'
+          description: A batch of up to 10 structured citations, verified in parallel.
+      additionalProperties: false
+    Citation:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+        author:
+          type:
+          - string
+          - 'null'
+        doi:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+        year:
+          type:
+          - string
+          - 'null'
+        bibtex_entry_type:
+          type:
+          - string
+          - 'null'
+        volume:
+          type:
+          - string
+          - 'null'
+        issue:
+          type:
+          - string
+          - 'null'
+        page:
+          type:
+          - string
+          - 'null'
+        publisher:
+          type:
+          - string
+          - 'null'
+        container_title:
+          type:
+          - string
+          - 'null'
+        abstract:
+          type:
+          - string
+          - 'null'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        retry_after_seconds:
+          type: integer
+          description: Present only on a rate-limit (429) rejection.
+        credits_reset_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
+    VerifyBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifyResult'
+    VerifySingleRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 2000
+          description: A single raw academic citation string, or a bare URL.
+      additionalProperties: false
+    CitationFields:
+      type: object
+      required:
+      - title
+      description: 'Already-structured bib-style fields for one citation -- skips LLM extraction entirely. A few common BibTeX spellings are accepted as aliases: `authors` for `author`, `container_title` for `journal`, `number` for `issue`, `pages` for `page`, `bibtex_entry_type` for `type`. Every value is capped at 500 characters; unrecognized field names are rejected with a 400.'
+      properties:
+        title:
+          type: string
+          maxLength: 500
+        author:
+          type: string
+          maxLength: 500
+        authors:
+          type: string
+          maxLength: 500
+          description: Alias for author.
+        year:
+          type:
+          - string
+          - integer
+        doi:
+          type: string
+          maxLength: 500
+        DOI:
+          type: string
+          maxLength: 500
+          description: Alias for doi.
+        url:
+          type: string
+          maxLength: 500
+        journal:
+          type: string
+          maxLength: 500
+        container_title:
+          type: string
+          maxLength: 500
+          description: Alias for journal.
+        volume:
+          type: string
+          maxLength: 500
+        issue:
+          type: string
+          maxLength: 500
+        number:
+          type: string
+          maxLength: 500
+          description: Alias for issue.
+        page:
+          type: string
+          maxLength: 500
+        pages:
+          type: string
+          maxLength: 500
+          description: Alias for page.
+        publisher:
+          type: string
+          maxLength: 500
+        type:
+          type: string
+          maxLength: 500
+          description: BibTeX entry type, e.g. article, book.
+        bibtex_entry_type:
+          type: string
+          maxLength: 500
+          description: Alias for type.
+        abstract:
+          type: string
+          maxLength: 500
+      additionalProperties: false
+    VerifyBatchRequest:
+      type: object
+      required:
+      - texts
+      properties:
+        texts:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 2000
+          description: A batch of up to 10 citation strings, verified in parallel.
+      additionalProperties: false
+    VerifyResult:
+      type: object
+      properties:
+        verification_status:
+          type: string
+          enum:
+          - verified
+          - mismatch
+          - not_found
+        mismatches:
+          type: array
+          items:
+            type: string
+          description: 'Populated only when verification_status is "mismatch". Any of: title, author, year, DOI, journal, volume, issue, page.'
+        reason:
+          type:
+          - string
+          - 'null'
+          description: Set for some not_found results (e.g. a dead URL); otherwise null.
+        source:
+          type:
+          - string
+          - 'null'
+          description: 'Database that supplied `citation`: OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, or Google Scholar. "Publisher Metadata" and "URL Direct Check" mean a URL was fetched directly instead.'
+        retracted:
+          type: boolean
+          description: 'Independent of verification_status: a citation can be a real, correctly-matched paper (verification_status "verified") and still be retracted. Sourced from retraction metadata already published by OpenAlex, Crossref, and PubMed; corroborated the same way the rest of verification is, so any one provider flagging it is enough. False does not mean "confirmed not retracted" -- only that none of the providers consulted flagged it.'
+        citation:
+          oneOf:
+          - $ref: '#/components/schemas/Citation'
+          - type: 'null'
+          description: Null only if nothing at all was found. When verification_status is not_found, this may still be populated as the closest candidate match, not a confirmed one — always branch on verification_status, never on whether citation is present.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key from any plan, including Free. Manage keys at https://accuracite.com/api-docs.
+externalDocs:
+  description: Full API documentation with curl and Python examples
+  url: https://accuracite.com/api-docs

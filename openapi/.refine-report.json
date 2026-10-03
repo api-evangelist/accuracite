@@ -1,0 +1,23 @@
+{
+  "provider": "accuracite",
+  "sources": [
+    "_original/accuracite-api-openapi.json"
+  ],
+  "outputs": [
+    "accuracite-generate-api-openapi.yml",
+    "accuracite-verify-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "accuracite-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "accuracite-api-openapi.json: tagged paths POST /api/v1/verify -> Verify",
+    "accuracite-api-openapi.json: tagged paths POST /api/v1/generate -> Generate",
+    "accuracite-api-openapi.json: declared missing tag: Generate",
+    "accuracite-api-openapi.json: declared missing tag: Verify",
+    "apis.yml register: written (+2 apis, 3 total)"
+  ],
+  "skipped": []
+}
