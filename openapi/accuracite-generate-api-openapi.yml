@@ -86,29 +86,20 @@ paths:
       - Generate
 components:
   schemas:
-    GenerateResponse:
+    Error:
       type: object
       properties:
-        citations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Citation'
-    GenerateRequest:
-      type: object
-      required:
-      - text
-      properties:
-        text:
+        error:
           type: string
-          maxLength: 5000
-          description: The scientific claim or statement you need backed up.
-        limit:
+        retry_after_seconds:
           type: integer
-          minimum: 1
-          maximum: 10
-          default: 1
-          description: Maximum number of citations to retrieve.
-      additionalProperties: false
+          description: Present only on a rate-limit (429) rejection.
+        credits_reset_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
     Citation:
       type: object
       properties:
@@ -161,20 +152,29 @@ components:
           type:
           - string
           - 'null'
-    Error:
+    GenerateRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 5000
+          description: The scientific claim or statement you need backed up.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 1
+          description: Maximum number of citations to retrieve.
+      additionalProperties: false
+    GenerateResponse:
       type: object
       properties:
-        error:
-          type: string
-        retry_after_seconds:
-          type: integer
-          description: Present only on a rate-limit (429) rejection.
-        credits_reset_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Citation'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
