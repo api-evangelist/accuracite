@@ -102,3 +102,46 @@ enterprise:
   note: >-
     No enterprise or "contact us" tier. The /for-publishers page markets editorial
     reference checking but routes to the same self-serve plans.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Pro
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Bulk Verification
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: 7-Day Pro Pass
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - one-time
+  - name: 7-Day Bulk Pass
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - one-time
