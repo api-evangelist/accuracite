@@ -163,27 +163,38 @@ paths:
       - Verify
 components:
   schemas:
-    Error:
+    VerifyResult:
       type: object
       properties:
-        error:
+        verification_status:
           type: string
-        retry_after_seconds:
-          type: integer
-          description: Present only on a rate-limit (429) rejection.
-        credits_reset_at:
+          enum:
+          - verified
+          - mismatch
+          - not_found
+        mismatches:
+          type: array
+          items:
+            type: string
+          description: 'Populated only when verification_status is "mismatch". Any of: title, author, year, DOI, journal, volume, issue, page.'
+        reason:
           type:
           - string
           - 'null'
-          format: date-time
-          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
-    VerifyBatchResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifyResult'
+          description: Set for some not_found results (e.g. a dead URL); otherwise null.
+        source:
+          type:
+          - string
+          - 'null'
+          description: 'Database that supplied `citation`: OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, or Google Scholar. "Publisher Metadata" and "URL Direct Check" mean a URL was fetched directly instead.'
+        retracted:
+          type: boolean
+          description: 'Independent of verification_status: a citation can be a real, correctly-matched paper (verification_status "verified") and still be retracted. Sourced from retraction metadata already published by OpenAlex, Crossref, and PubMed; corroborated the same way the rest of verification is, so any one provider flagging it is enough. False does not mean "confirmed not retracted" -- only that none of the providers consulted flagged it.'
+        citation:
+          oneOf:
+          - $ref: '#/components/schemas/Citation'
+          - type: 'null'
+          description: Null only if nothing at all was found. When verification_status is not_found, this may still be populated as the closest candidate match, not a confirmed one — always branch on verification_status, never on whether citation is present.
     CitationFields:
       type: object
       required:
@@ -253,28 +264,13 @@ components:
           type: string
           maxLength: 500
       additionalProperties: false
-    VerifySingleRequest:
+    VerifyCitationFieldsRequest:
       type: object
       required:
-      - text
+      - citation
       properties:
-        text:
-          type: string
-          maxLength: 2000
-          description: A single raw academic citation string, or a bare URL.
-      additionalProperties: false
-    VerifyCitationsBatchRequest:
-      type: object
-      required:
-      - citations
-      properties:
-        citations:
-          type: array
-          minItems: 1
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/CitationFields'
-          description: A batch of up to 10 structured citations, verified in parallel.
+        citation:
+          $ref: '#/components/schemas/CitationFields'
       additionalProperties: false
     Citation:
       type: object
@@ -328,6 +324,50 @@ components:
           type:
           - string
           - 'null'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        retry_after_seconds:
+          type: integer
+          description: Present only on a rate-limit (429) rejection.
+        credits_reset_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
+    VerifySingleRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 2000
+          description: A single raw academic citation string, or a bare URL.
+      additionalProperties: false
+    VerifyCitationsBatchRequest:
+      type: object
+      required:
+      - citations
+      properties:
+        citations:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/CitationFields'
+          description: A batch of up to 10 structured citations, verified in parallel.
+      additionalProperties: false
+    VerifyBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifyResult'
     VerifyBatchRequest:
       type: object
       required:
@@ -342,46 +382,6 @@ components:
             maxLength: 2000
           description: A batch of up to 10 citation strings, verified in parallel.
       additionalProperties: false
-    VerifyCitationFieldsRequest:
-      type: object
-      required:
-      - citation
-      properties:
-        citation:
-          $ref: '#/components/schemas/CitationFields'
-      additionalProperties: false
-    VerifyResult:
-      type: object
-      properties:
-        verification_status:
-          type: string
-          enum:
-          - verified
-          - mismatch
-          - not_found
-        mismatches:
-          type: array
-          items:
-            type: string
-          description: 'Populated only when verification_status is "mismatch". Any of: title, author, year, DOI, journal, volume, issue, page.'
-        reason:
-          type:
-          - string
-          - 'null'
-          description: Set for some not_found results (e.g. a dead URL); otherwise null.
-        source:
-          type:
-          - string
-          - 'null'
-          description: 'Database that supplied `citation`: OpenAlex, Crossref, Semantic Scholar, PubMed, DBLP, arXiv, or Google Scholar. "Publisher Metadata" and "URL Direct Check" mean a URL was fetched directly instead.'
-        retracted:
-          type: boolean
-          description: 'Independent of verification_status: a citation can be a real, correctly-matched paper (verification_status "verified") and still be retracted. Sourced from retraction metadata already published by OpenAlex, Crossref, and PubMed; corroborated the same way the rest of verification is, so any one provider flagging it is enough. False does not mean "confirmed not retracted" -- only that none of the providers consulted flagged it.'
-        citation:
-          oneOf:
-          - $ref: '#/components/schemas/Citation'
-          - type: 'null'
-          description: Null only if nothing at all was found. When verification_status is not_found, this may still be populated as the closest candidate match, not a confirmed one — always branch on verification_status, never on whether citation is present.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
