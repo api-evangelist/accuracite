@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: AccuraCite Verify API
   version: 1.0.0
-  description: Synchronous REST API for citation verification and claim-backed citation finding.
+  description: 'Synchronous REST API for citation verification and claim-backed citation finding. Verify a citation string (or small batch) against 6 academic databases, or find real literature that supports a given claim. Both endpoints require an X-API-Key header (available on every plan, including Free) and draw from one shared per-user credit pool: a verification costs 1 credit, a citation found by /api/v1/generate costs 4 credits each. Full narrative documentation with request/response examples is at /api-docs.'
   termsOfService: https://accuracite.com/terms
   contact:
     email: support@accuracite.com
@@ -163,6 +163,43 @@ paths:
       - Verify
 components:
   schemas:
+    VerifySingleRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 2000
+          description: A single raw academic citation string, or a bare URL.
+      additionalProperties: false
+    VerifyBatchRequest:
+      type: object
+      required:
+      - texts
+      properties:
+        texts:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 2000
+          description: A batch of up to 10 citation strings, verified in parallel.
+      additionalProperties: false
+    VerifyCitationsBatchRequest:
+      type: object
+      required:
+      - citations
+      properties:
+        citations:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/CitationFields'
+          description: A batch of up to 10 structured citations, verified in parallel.
+      additionalProperties: false
     VerifyResult:
       type: object
       properties:
@@ -195,6 +232,73 @@ components:
           - $ref: '#/components/schemas/Citation'
           - type: 'null'
           description: Null only if nothing at all was found. When verification_status is not_found, this may still be populated as the closest candidate match, not a confirmed one — always branch on verification_status, never on whether citation is present.
+    VerifyCitationFieldsRequest:
+      type: object
+      required:
+      - citation
+      properties:
+        citation:
+          $ref: '#/components/schemas/CitationFields'
+      additionalProperties: false
+    VerifyBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifyResult'
+    Citation:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+        author:
+          type:
+          - string
+          - 'null'
+        doi:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+        year:
+          type:
+          - string
+          - 'null'
+        bibtex_entry_type:
+          type:
+          - string
+          - 'null'
+        volume:
+          type:
+          - string
+          - 'null'
+        issue:
+          type:
+          - string
+          - 'null'
+        page:
+          type:
+          - string
+          - 'null'
+        publisher:
+          type:
+          - string
+          - 'null'
+        container_title:
+          type:
+          - string
+          - 'null'
+        abstract:
+          type:
+          - string
+          - 'null'
     CitationFields:
       type: object
       required:
@@ -264,66 +368,6 @@ components:
           type: string
           maxLength: 500
       additionalProperties: false
-    VerifyCitationFieldsRequest:
-      type: object
-      required:
-      - citation
-      properties:
-        citation:
-          $ref: '#/components/schemas/CitationFields'
-      additionalProperties: false
-    Citation:
-      type: object
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-        author:
-          type:
-          - string
-          - 'null'
-        doi:
-          type:
-          - string
-          - 'null'
-        url:
-          type:
-          - string
-          - 'null'
-          format: uri
-        year:
-          type:
-          - string
-          - 'null'
-        bibtex_entry_type:
-          type:
-          - string
-          - 'null'
-        volume:
-          type:
-          - string
-          - 'null'
-        issue:
-          type:
-          - string
-          - 'null'
-        page:
-          type:
-          - string
-          - 'null'
-        publisher:
-          type:
-          - string
-          - 'null'
-        container_title:
-          type:
-          - string
-          - 'null'
-        abstract:
-          type:
-          - string
-          - 'null'
     Error:
       type: object
       properties:
@@ -338,50 +382,6 @@ components:
           - 'null'
           format: date-time
           description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
-    VerifySingleRequest:
-      type: object
-      required:
-      - text
-      properties:
-        text:
-          type: string
-          maxLength: 2000
-          description: A single raw academic citation string, or a bare URL.
-      additionalProperties: false
-    VerifyCitationsBatchRequest:
-      type: object
-      required:
-      - citations
-      properties:
-        citations:
-          type: array
-          minItems: 1
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/CitationFields'
-          description: A batch of up to 10 structured citations, verified in parallel.
-      additionalProperties: false
-    VerifyBatchResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifyResult'
-    VerifyBatchRequest:
-      type: object
-      required:
-      - texts
-      properties:
-        texts:
-          type: array
-          minItems: 1
-          maxItems: 10
-          items:
-            type: string
-            maxLength: 2000
-          description: A batch of up to 10 citation strings, verified in parallel.
-      additionalProperties: false
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

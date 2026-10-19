@@ -1,0 +1,73 @@
+openapi: 3.2.0
+info:
+  title: AccuraCite Usage API
+  version: 1.0.0
+  description: 'Synchronous REST API for citation verification and claim-backed citation finding. Verify a citation string (or small batch) against 6 academic databases, or find real literature that supports a given claim. Both endpoints require an X-API-Key header (available on every plan, including Free) and draw from one shared per-user credit pool: a verification costs 1 credit, a citation found by /api/v1/generate costs 4 credits each. Full narrative documentation with request/response examples is at /api-docs.'
+  termsOfService: https://accuracite.com/terms
+  contact:
+    email: support@accuracite.com
+servers:
+- url: https://accuracite.com
+  description: Production
+security:
+- ApiKeyAuth: []
+tags:
+- name: Usage
+paths:
+  /api/v1/usage:
+    get:
+      operationId: getUsage
+      summary: Check your credit usage
+      description: 'Read-only. Returns how much of the key owner''s credit pool is used and remaining. Costs no credits. Rate limit: 30 requests/minute per API key.'
+      responses:
+        '200':
+          description: Current credit usage.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan:
+                    type: string
+                  period:
+                    type: string
+                    enum:
+                    - day
+                    - month
+                    - pass
+                  credits_used:
+                    type: number
+                  credits_limit:
+                    type:
+                    - number
+                    - 'null'
+                    description: null on unlimited plans.
+                  credits_remaining:
+                    type:
+                    - number
+                    - 'null'
+                  credits_reset_at:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  verifications:
+                    type: integer
+                  generations:
+                    type: integer
+        '401':
+          description: Missing or invalid API key.
+        '429':
+          description: Rate limit exceeded.
+      tags:
+      - Usage
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key from any plan, including Free. Manage keys at https://accuracite.com/api-docs.
+externalDocs:
+  description: Full API documentation with curl and Python examples
+  url: https://accuracite.com/api-docs

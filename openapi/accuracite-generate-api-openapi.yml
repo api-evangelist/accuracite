@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: AccuraCite Generate API
   version: 1.0.0
-  description: Synchronous REST API for citation verification and claim-backed citation finding.
+  description: 'Synchronous REST API for citation verification and claim-backed citation finding. Verify a citation string (or small batch) against 6 academic databases, or find real literature that supports a given claim. Both endpoints require an X-API-Key header (available on every plan, including Free) and draw from one shared per-user credit pool: a verification costs 1 credit, a citation found by /api/v1/generate costs 4 credits each. Full narrative documentation with request/response examples is at /api-docs.'
   termsOfService: https://accuracite.com/terms
   contact:
     email: support@accuracite.com
@@ -86,36 +86,6 @@ paths:
       - Generate
 components:
   schemas:
-    GenerateRequest:
-      type: object
-      required:
-      - text
-      properties:
-        text:
-          type: string
-          maxLength: 5000
-          description: The scientific claim or statement you need backed up.
-        limit:
-          type: integer
-          minimum: 1
-          maximum: 10
-          default: 1
-          description: Maximum number of citations to retrieve.
-      additionalProperties: false
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        retry_after_seconds:
-          type: integer
-          description: Present only on a rate-limit (429) rejection.
-        credits_reset_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
     GenerateResponse:
       type: object
       properties:
@@ -175,6 +145,36 @@ components:
           type:
           - string
           - 'null'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        retry_after_seconds:
+          type: integer
+          description: Present only on a rate-limit (429) rejection.
+        credits_reset_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'Present only on a credit-limit (429) rejection: ISO-8601 UTC timestamp of when the credit pool refills.'
+    GenerateRequest:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 5000
+          description: The scientific claim or statement you need backed up.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 1
+          description: Maximum number of citations to retrieve.
+      additionalProperties: false
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

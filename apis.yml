@@ -194,6 +194,16 @@ apis:
     url: json-schema/accuracite-verify-single-request-schema.json
   - type: JSONSchema
     url: json-schema/accuracite-verify-citation-fields-request-schema.json
+- aid: accuracite:accuracite-usage-api
+  name: AccuraCite Usage API
+  description: The Usage API from AccuraCite — 1 operation(s) for usage.
+  humanURL: https://accuracite.com/api-docs
+  baseURL: https://accuracite.com/api/v1
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/accuracite-usage-api-openapi.yml
 x-correction-request:
   requested: '2026-10-02'
   source:
