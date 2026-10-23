@@ -71,3 +71,9 @@ components:
 externalDocs:
   description: Full API documentation with curl and Python examples
   url: https://accuracite.com/api-docs
+x-provenance:
+  method: harvested
+  publisher: AccuraCite
+  source: https://accuracite.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
